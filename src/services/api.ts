@@ -27,39 +27,39 @@ async function request<T>(url: string, options: RequestInit = {}, auth = false):
 
 export const api = {
   get: async (url: string, auth = false) => {
-    return request<any>(url, { method: "GET" }, auth);
+    return request<unknown>(url, { method: "GET" }, auth);
   },
-  post: async (url: string, data: any, auth = false, isFormData = false) => {
+  post: async (url: string, data: unknown, auth = false, isFormData = false) => {
     let body: BodyInit;
-    let headers: HeadersInit = {};
+    const headers: HeadersInit = {};
     if (isFormData) {
-      body = data;
+      body = data as BodyInit;
     } else {
       body = JSON.stringify(data);
       headers["Content-Type"] = "application/json";
     }
-    return request<any>(url, { method: "POST", body, headers }, auth);
+    return request<unknown>(url, { method: "POST", body, headers }, auth);
   },
-  put: async (url: string, data: any, auth = false, isFormData = false) => {
+  put: async (url: string, data: unknown, auth = false, isFormData = false) => {
     let body: BodyInit;
-    let headers: HeadersInit = {};
+    const headers: HeadersInit = {};
     if (isFormData) {
-      body = data;
+      body = data as BodyInit;
     } else {
       body = JSON.stringify(data);
       headers["Content-Type"] = "application/json";
     }
-    return request<any>(url, { method: "PUT", body, headers }, auth);
+    return request<unknown>(url, { method: "PUT", body, headers }, auth);
   },
-  patch: async (url: string, data: any, auth = false) => {
-    return request<any>(url, { method: "PATCH", body: JSON.stringify(data), headers: { "Content-Type": "application/json" } }, auth);
+  patch: async (url: string, data: unknown, auth = false) => {
+    return request<unknown>(url, { method: "PATCH", body: JSON.stringify(data), headers: { "Content-Type": "application/json" } }, auth);
   },
-  delete: async (url: string, data?: any, auth = false) => {
-    let options: RequestInit = { method: "DELETE" };
+  delete: async (url: string, data?: unknown, auth = false) => {
+    const options: RequestInit = { method: "DELETE" };
     if (data) {
       options.body = JSON.stringify(data);
       options.headers = { "Content-Type": "application/json" };
     }
-    return request<any>(url, options, auth);
+    return request<unknown>(url, options, auth);
   },
 };
