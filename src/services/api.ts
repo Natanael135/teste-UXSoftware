@@ -1,11 +1,27 @@
 // Produto em destaque mock
-const featuredProduct = {
-  id: "1",
-  name: "Notebook Gamer",
-  price: 5999.99,
-  image: "https://placehold.co/600x400",
-  description: "Notebook potente para jogos e trabalho. Aproveite desempenho máximo com design moderno e bateria de longa duração.",
-};
+const featuredProducts = [
+  {
+    id: "1",
+    name: "Notebook Gamer",
+    price: 5999.99,
+    image: "https://placehold.co/600x400",
+    description: "Notebook potente para jogos e trabalho. Aproveite desempenho máximo com design moderno e bateria de longa duração.",
+  },
+  {
+    id: "2",
+    name: "Mouse Sem Fio",
+    price: 199.9,
+    image: "https://placehold.co/600x400",
+    description: "Mouse ergonômico e preciso para produtividade e games.",
+  },
+  {
+    id: "3",
+    name: "Smartphone Pro Max",
+    price: 3999.99,
+    image: "https://placehold.co/600x400",
+    description: "Celular topo de linha com câmera avançada e bateria de longa duração.",
+  },
+];
 // MOCK de comentários por produto
 const mockComments: Record<string, Array<{ id: string; user: string; rating: number; comment?: string }>> = {
   "1": [
@@ -109,7 +125,7 @@ export const api = {
       return { data: mockProducts };
     }
     if (url === "/products/featured") {
-      return { data: featuredProduct };
+      return { data: featuredProducts };
     }
     if (url.startsWith("/products/")) {
       const id = url.split("/").pop();

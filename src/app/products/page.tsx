@@ -8,7 +8,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { Container } from "@/components/Container";
 import { showError, showSuccess } from "@/utils/toast";
 import { ProductCard } from "@/components/ProductCard";
-import { FeaturedProduct } from "@/components/FeaturedProduct";
+import { FeaturedCarousel } from "@/components/FeaturedCarousel";
 import { Input } from "@/components/ui/input";
 import { ProductFilters } from "@/components/ProductFilters";
 
@@ -29,7 +29,7 @@ interface Product {
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [featured, setFeatured] = useState<Product | null>(null);
+  const [featured, setFeatured] = useState<Product[]>([]);
   const search = useSearchStore((s) => s.search);
   const debouncedSearch = useDebounce(search, 1000);
   const isDebouncing = search !== debouncedSearch;
@@ -64,13 +64,12 @@ export default function ProductsPage() {
   useEffect(() => {
     fetchProducts();
     api.get("/products/featured").then(res => {
-      // O mock sempre retorna um único produto destacado
-      if (res.data && typeof res.data === 'object' && 'id' in res.data) {
+      if (Array.isArray(res.data)) {
         setFeatured(res.data);
       } else {
-        setFeatured(null);
+        setFeatured([]);
       }
-    }).catch(() => setFeatured(null));
+    }).catch(() => setFeatured([]));
   }, []);
 
   function handleAddToCart(product: Product) {
@@ -126,14 +125,8 @@ export default function ProductsPage() {
     <>
       <Container className="py-12">
         {/* Só mostra destaque e título se não estiver pesquisando */}
-        {!hasSearch && featured && (
-          <FeaturedProduct
-            id={featured.id}
-            name={featured.name}
-            description={featured.description || ''}
-            image={featured.image || ''}
-            price={featured.price}
-          />
+        {!hasSearch && featured.length > 0 && (
+          <FeaturedCarousel products={featured.map(p => ({ ...p, description: p.description || "" }))} />
         )}
         {!hasSearch && (
           <div className="mb-8 text-center">
