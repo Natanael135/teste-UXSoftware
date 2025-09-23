@@ -1,5 +1,6 @@
-import { AppImage } from "@/components/AppImage";
+
 "use client";
+import { AppImage } from "@/components/AppImage";
 import { useCartStore } from "@/contexts/cart";
 import { showSuccess } from "@/utils/toast";
 import { Container } from "@/components/Container";
