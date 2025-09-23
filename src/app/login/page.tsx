@@ -23,11 +23,11 @@ export default function LoginPage() {
   async function onSubmit(data: Record<string, unknown>) {
     setLoading(true);
     try {
-      const res = await api.post("/auth/login", data);
-      login(res.data.user as import("@/store/auth").User, res.data.token as string);
+      const res = await api.post<{ user: import("@/store/auth").User; accessToken: string }>("/auth/login", data);
+      login(res.user, res.accessToken);
       showSuccess("Login realizado com sucesso!");
       // Se for admin, redireciona para dashboard admin
-      if (res.data.user && res.data.user.email === "admin@admin.com") {
+      if (res.user && res.user.email === "admin@admin.com") {
         router.push("/admin/dashboard");
       } else {
         router.push("/");

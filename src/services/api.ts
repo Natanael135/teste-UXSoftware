@@ -29,7 +29,7 @@ export const api = {
   get: async <T = unknown>(url: string, auth = false): Promise<T> => {
     return request<T>(url, { method: "GET" }, auth);
   },
-  post: async (url: string, data: unknown, auth = false, isFormData = false) => {
+  post: async <T = unknown>(url: string, data: unknown, auth = false, isFormData = false): Promise<T> => {
     let body: BodyInit;
     const headers: HeadersInit = {};
     if (isFormData) {
@@ -38,9 +38,9 @@ export const api = {
       body = JSON.stringify(data);
       headers["Content-Type"] = "application/json";
     }
-    return request<unknown>(url, { method: "POST", body, headers }, auth);
+    return request<T>(url, { method: "POST", body, headers }, auth);
   },
-  put: async (url: string, data: unknown, auth = false, isFormData = false) => {
+  put: async <T = unknown>(url: string, data: unknown, auth = false, isFormData = false): Promise<T> => {
     let body: BodyInit;
     const headers: HeadersInit = {};
     if (isFormData) {
@@ -49,17 +49,17 @@ export const api = {
       body = JSON.stringify(data);
       headers["Content-Type"] = "application/json";
     }
-    return request<unknown>(url, { method: "PUT", body, headers }, auth);
+    return request<T>(url, { method: "PUT", body, headers }, auth);
   },
-  patch: async (url: string, data: unknown, auth = false) => {
-    return request<unknown>(url, { method: "PATCH", body: JSON.stringify(data), headers: { "Content-Type": "application/json" } }, auth);
+  patch: async <T = unknown>(url: string, data: unknown, auth = false): Promise<T> => {
+    return request<T>(url, { method: "PATCH", body: JSON.stringify(data), headers: { "Content-Type": "application/json" } }, auth);
   },
-  delete: async (url: string, data?: unknown, auth = false) => {
+  delete: async <T = unknown>(url: string, data?: unknown, auth = false): Promise<T> => {
     const options: RequestInit = { method: "DELETE" };
     if (data) {
       options.body = JSON.stringify(data);
       options.headers = { "Content-Type": "application/json" };
     }
-    return request<unknown>(url, options, auth);
+    return request<T>(url, options, auth);
   },
 };
