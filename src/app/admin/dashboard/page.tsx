@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import Link from "next/link";
 import { api } from "@/services/api";
@@ -15,6 +16,7 @@ export default function AdminDashboard() {
     name: "",
     price: "",
     image: "",
+    imageUrl: "",
     description: "",
     category: "",
     brand: "",
@@ -33,6 +35,7 @@ export default function AdminDashboard() {
         name: editProduct.name || "",
         price: String(editProduct.price ?? ""),
         image: editProduct.image || "",
+        imageUrl: editProduct.imageUrl || "",
         description: editProduct.description || "",
         category: editProduct.category || "",
         brand: editProduct.brand || "",
@@ -73,26 +76,30 @@ export default function AdminDashboard() {
 
   async function handleEditSave() {
     setSaving(true);
-    // Aqui você faria a chamada para API real
-    setProducts((prev) => prev.map((p) =>
-      p.id === editProduct?.id
-        ? {
-            ...p,
-            name: editForm.name,
-            price: Number(editForm.price),
-            image: editForm.image, // agora base64
-            description: editForm.description,
-            category: editForm.category,
-            brand: editForm.brand,
-            rating: editForm.rating ? Number(editForm.rating) : undefined,
-            freeShipping: !!editForm.freeShipping,
-            color: editForm.color,
-            stock: editForm.stock ? Number(editForm.stock) : undefined
-          }
-        : p
-    ));
-    setSaving(false);
-    setEditProduct(null);
+    if (!editProduct) return;
+    try {
+      const updated = await api.put<Product>(`/products/${editProduct.id}`,
+        {
+          name: editForm.name,
+          price: Number(editForm.price),
+          image: editForm.image, // base64 ou url
+          description: editForm.description,
+          category: editForm.category,
+          brand: editForm.brand,
+          rating: editForm.rating ? Number(editForm.rating) : undefined,
+          freeShipping: !!editForm.freeShipping,
+          color: editForm.color,
+          stock: editForm.stock ? Number(editForm.stock) : undefined
+        },
+        true // auth se necessário
+      );
+      setProducts((prev) => prev.map((p) => p.id === updated.id ? updated : p));
+      setEditProduct(null);
+    } catch (e: any) {
+      showError(e.message || "Erro ao salvar produto");
+    } finally {
+      setSaving(false);
+    }
   }
 
   useEffect(() => {
@@ -148,7 +155,15 @@ export default function AdminDashboard() {
               <td className="p-2">R$ {p.price}</td>
               <td className="p-2 flex gap-2">
                 <button className="text-accent hover:underline" onClick={() => handleEditClick(p)}>Editar</button>
-                <button className="text-red-600 hover:underline">Excluir</button>
+                <button className="text-red-600 hover:underline" onClick={async () => {
+                  if (!confirm('Tem certeza que deseja excluir este produto?')) return;
+                  try {
+                    await api.delete(`/products/${p.id}`, undefined, true);
+                    setProducts((prev) => prev.filter(prod => prod.id !== p.id));
+                  } catch (e: any) {
+                    showError(e.message || "Erro ao excluir produto");
+                  }
+                }}>Excluir</button>
               </td>
             </tr>
           ))}
@@ -175,9 +190,11 @@ export default function AdminDashboard() {
                 Imagem
                 <input name="imageFile" type="file" accept="image/*" onChange={handleEditChange} className="border rounded px-3 py-2" />
                 {editForm.imagePreview || editForm.image ? (
-                  <img
-                    src={editForm.imagePreview || editForm.image}
+                  <Image
+                    src={(editForm.imagePreview || editForm.imageUrl || editForm.image) ?? ""}
                     alt="Preview"
+                    width={220}
+                    height={128}
                     className="mt-2 rounded shadow max-h-32 object-contain border"
                   />
                 ) : null}

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import { api } from "@/services/api";
 import { Container } from "@/components/Container";
@@ -20,11 +21,11 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    api.get<{ product: Product; comments: Comment[]; recommendations: Product[] }>(`/products/${id}`)
+    api.get<Product>(`/products/${id}`)
       .then((res) => {
-        setProduct(res.product || null);
-        setComments(res.comments || []);
-        setRecommendations(res.recommendations || []);
+        setProduct(res || null);
+        setComments([]);
+        setRecommendations([]);
         setLoading(false);
       });
   }, [id]);
@@ -36,7 +37,18 @@ export default function ProductDetailPage() {
     <Container className="py-12 max-w-3xl animate-fade-in">
       <div className="flex flex-col md:flex-row gap-8">
         <div className="flex-1 flex flex-col items-center">
-          <img src={product.image} alt={product.name} className="rounded-lg shadow-lg w-full max-w-xs object-cover mb-4 bg-background" />
+          <Image
+            src={
+              product.imageUrl?.trim() ? product.imageUrl :
+              product.image?.trim() ? product.image :
+              "https://placehold.co/320x320?text=Sem+Imagem"
+            }
+            alt={product.name}
+            width={320}
+            height={320}
+            className="rounded-lg shadow-lg w-full max-w-xs object-cover mb-4 bg-background"
+            unoptimized
+          />
           {product.freeShipping && <span className="text-xs text-accent font-semibold">Frete grátis</span>}
         </div>
         <div className="flex-1 flex flex-col gap-3">
@@ -107,7 +119,18 @@ export default function ProductDetailPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {recommendations.map((rec) => (
               <div key={rec.id} className="bg-card rounded shadow p-3 flex gap-3 items-center border border-border">
-                <img src={rec.image} alt={rec.name} className="w-20 h-20 object-cover rounded bg-background" />
+                <Image
+                  src={
+                    rec.imageUrl?.trim() ? rec.imageUrl :
+                    rec.image?.trim() ? rec.image :
+                    "https://placehold.co/80x80?text=Sem+Imagem"
+                  }
+                  alt={rec.name}
+                  width={80}
+                  height={80}
+                  className="w-20 h-20 object-cover rounded bg-background"
+                  unoptimized
+                />
                 <div className="flex-1">
                   <div className="font-semibold text-sm mb-1 text-foreground">{rec.name}</div>
                   <div className="text-accent font-bold text-base mb-1">R$ {rec.price.toFixed(2)}</div>

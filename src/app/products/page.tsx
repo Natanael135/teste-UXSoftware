@@ -8,8 +8,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { Container } from "@/components/Container";
 import { showError, showSuccess } from "@/utils/toast";
 import { ProductCard } from "@/components/ProductCard";
-import { FeaturedCarousel } from "@/components/FeaturedCarousel";
-import { Input } from "@/components/ui/input";
+// ...existing code...
 import { ProductFilters } from "@/components/ProductFilters";
 
 interface Product {
@@ -17,6 +16,7 @@ interface Product {
   name: string;
   price: number;
   image?: string;
+  imageUrl?: string;
   description?: string;
   category?: string;
   brand?: string;
@@ -29,7 +29,7 @@ interface Product {
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [featured, setFeatured] = useState<Product[]>([]);
+  // ...existing code...
   const search = useSearchStore((s) => s.search);
   const debouncedSearch = useDebounce(search, 1000);
   const isDebouncing = search !== debouncedSearch;
@@ -156,7 +156,16 @@ export default function ProductsPage() {
                 id={product.id}
                 name={product.name}
                 price={product.price}
-                image={product.image}
+                image={
+                  product.imageUrl
+                    ? product.imageUrl.includes('/uploads/')
+                      ? product.imageUrl
+                      : product.imageUrl.replace(
+                          /onrender\.com\/?(uploads\/)?/,
+                          'onrender.com/uploads/'
+                        )
+                    : product.image
+                }
                 description={product.description}
                 onAddToCart={() => handleAddToCart(product)}
                 animationDelay={idx * 80}

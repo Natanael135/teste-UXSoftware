@@ -9,6 +9,7 @@ interface ProductCardProps {
   name: string;
   price: number;
   image?: string;
+  imageUrl?: string;
   description?: string;
   onAddToCart?: () => void;
   animationDelay?: number;
@@ -18,13 +19,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   name,
   price,
   image,
+  imageUrl,
   description,
   onAddToCart,
   animationDelay = 0,
   ...props
 }) => (
   <Card style={{ animationDelay: `${animationDelay}ms` }} className="group shadow-lg hover:scale-[1.03] hover:shadow-xl transition-transform duration-300 animate-fade-in bg-card border border-border" {...props}>
-    {image && (
+    {(imageUrl || image) && (
       <Link
         href={`/products/${props.id ?? ""}`}
         tabIndex={-1}
@@ -32,7 +34,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         style={{ minHeight: 160 }}
       >
         <AppImage
-          src={image}
+          src={(imageUrl || image) ?? ""}
           alt={name}
           width={220}
           height={160}
