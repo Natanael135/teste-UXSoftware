@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000";
+const API_URL = "https://teste-uxsoftware-backend.onrender.com";
 
 function getToken() {
   if (typeof window !== "undefined") {
