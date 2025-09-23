@@ -20,21 +20,13 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    api.get(`/products/${id}`).then((res) => {
-      // Se vier objeto com product/comments/recommendations
-      if ('product' in res.data) {
-        setProduct(res.data.product || null);
-        setComments(res.data.comments || []);
-        setRecommendations(res.data.recommendations || []);
-      } else if (Array.isArray(res.data)) {
-        // fallback para array (caso mock antigo)
-        const found = res.data.find((p: Product) => p.id === id);
-        setProduct(found || null);
-        setComments([]);
-        setRecommendations([]);
-      }
-      setLoading(false);
-    });
+    api.get<{ product: Product; comments: Comment[]; recommendations: Product[] }>(`/products/${id}`)
+      .then((res) => {
+        setProduct(res.product || null);
+        setComments(res.comments || []);
+        setRecommendations(res.recommendations || []);
+        setLoading(false);
+      });
   }, [id]);
 
   if (loading) return <Container className="py-12 text-center text-muted-foreground">Carregando...</Container>;
