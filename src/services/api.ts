@@ -26,8 +26,8 @@ async function request<T>(url: string, options: RequestInit = {}, auth = false):
 }
 
 export const api = {
-  get: async (url: string, auth = false) => {
-    return request<unknown>(url, { method: "GET" }, auth);
+  get: async <T = unknown>(url: string, auth = false): Promise<T> => {
+    return request<T>(url, { method: "GET" }, auth);
   },
   post: async (url: string, data: unknown, auth = false, isFormData = false) => {
     let body: BodyInit;

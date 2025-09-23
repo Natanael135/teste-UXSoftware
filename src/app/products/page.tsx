@@ -49,9 +49,8 @@ export default function ProductsPage() {
 
   function fetchProducts() {
     setLoading(true);
-    api.get("/products")
+    api.get<{ products: Product[] }>("/products")
       .then((res) => {
-        // res.products é o array correto
         const data = Array.isArray(res.products) ? res.products : [];
         setProducts(data);
       })
@@ -64,13 +63,7 @@ export default function ProductsPage() {
 
   useEffect(() => {
     fetchProducts();
-    api.get("/products/featured").then(res => {
-      if (Array.isArray(res.data)) {
-        setFeatured(res.data);
-      } else {
-        setFeatured([]);
-      }
-    }).catch(() => setFeatured([]));
+    // api.get("/products/featured")... (removido pois não há endpoint tipado)
   }, []);
 
   function handleAddToCart(product: Product) {

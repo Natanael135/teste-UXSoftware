@@ -96,8 +96,11 @@ export default function AdminDashboard() {
   }
 
   useEffect(() => {
-    api.get("/products")
-      .then(res => setProducts(Array.isArray(res.data) ? res.data : []))
+    api.get<{ products: Product[] }>("/products")
+      .then((res) => {
+        const data = Array.isArray(res.products) ? res.products : [];
+        setProducts(data);
+      })
       .catch(() => { setProducts([]); showError("Erro ao carregar produtos"); })
       .finally(() => setLoading(false));
   }, []);
