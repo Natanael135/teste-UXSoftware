@@ -51,7 +51,8 @@ export default function ProductsPage() {
     setLoading(true);
     api.get("/products")
       .then((res) => {
-        const data = Array.isArray(res.data) ? res.data : [];
+        // res.products é o array correto
+        const data = Array.isArray(res.products) ? res.products : [];
         setProducts(data);
       })
       .catch(() => {
@@ -125,9 +126,10 @@ export default function ProductsPage() {
     <>
   <Container className="py-4 md:py-8">
         {/* Só mostra destaque e título se não estiver pesquisando */}
-        {!hasSearch && featured.length > 0 && (
-          <FeaturedCarousel products={featured.map(p => ({ ...p, description: p.description || "", image: p.image || "" }))} />
-        )}
+        {/* Destaque desativado pois não há endpoint, adapte se necessário */}
+        {/* {!hasSearch && featured.length > 0 && (
+          <FeaturedCarousel products={featured.map(p => ({ ...p, description: p.description || "", image: p.imageUrl || p.image || "" }))} />
+        )} */}
         {!hasSearch && (
           <div className="mb-4 text-center">
             <h1 className="text-3xl font-extrabold tracking-tight text-primary drop-shadow-lg animate-fade-in">Produtos em Destaque</h1>
@@ -161,7 +163,7 @@ export default function ProductsPage() {
                 id={product.id}
                 name={product.name}
                 price={product.price}
-                image={product.image}
+                image={product.imageUrl || product.image}
                 description={product.description}
                 onAddToCart={() => handleAddToCart(product)}
                 animationDelay={idx * 80}

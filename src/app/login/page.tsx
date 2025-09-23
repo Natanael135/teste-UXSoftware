@@ -24,10 +24,15 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const res = await api.post("/auth/login", data);
-  login(res.data.user as import("@/store/auth").User, res.data.token as string);
+      login(res.data.user as import("@/store/auth").User, res.data.token as string);
       showSuccess("Login realizado com sucesso!");
-      router.push("/");
-  } catch (err: unknown) {
+      // Se for admin, redireciona para dashboard admin
+      if (res.data.user && res.data.user.email === "admin@admin.com") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/");
+      }
+    } catch (err: unknown) {
       if (typeof err === "object" && err && "response" in err && err.response && typeof err.response === "object" && "data" in err.response && err.response.data && typeof err.response.data === "object" && "message" in err.response.data) {
         showError((err.response.data as { message?: string }).message || "Erro ao fazer login");
       } else {
