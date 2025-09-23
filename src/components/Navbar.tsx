@@ -6,7 +6,9 @@ import { Button } from "@/components/ui/button";
 // import { ThemeToggle } from "@/components/ThemeToggle";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { Menu, ChevronDown, Search } from "lucide-react";
+import { MdShoppingCart } from "react-icons/md";
 import { useAuthStore } from "@/store/auth";
+import { useCartStore } from "@/contexts/cart";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -25,7 +27,9 @@ export const Navbar: React.FC = () => {
   const logout = useAuthStore((s) => s.logout);
   const pathname = usePathname();
   // Remove border-b se estiver na página de produtos
-  const borderClass = pathname === "/products" ? "" : "border-b border-border";
+    const borderClass = pathname === "/products" ? "" : "border-b border-border";
+    const cartItems = useCartStore((s) => s.items);
+    const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   return (
     <nav className={`bg-primary/90 backdrop-blur-md ${borderClass} shadow-sm`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-20 flex items-center gap-4">
@@ -42,6 +46,22 @@ export const Navbar: React.FC = () => {
               <nav className="flex flex-col gap-2 mt-8">
                 <Link href="/products" className="text-lg font-medium py-2 px-2 rounded text-primary-foreground hover:bg-accent hover:text-accent-foreground transition" tabIndex={0}>Produtos</Link>
                 <Link href="/cart" className="text-lg font-medium py-2 px-2 rounded text-primary-foreground hover:bg-accent hover:text-accent-foreground transition" tabIndex={0}>Carrinho</Link>
+          <Link href="/cart" className="relative flex items-center justify-center py-2 px-2 rounded text-primary-foreground hover:bg-accent hover:text-accent-foreground transition" tabIndex={0} aria-label="Carrinho">
+            <MdShoppingCart className="w-7 h-7" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs font-bold rounded-full px-1.5 py-0.5 border-2 border-background min-w-[20px] text-center select-none">
+                {cartCount}
+              </span>
+            )}
+          </Link>
+          <Link href="/cart" className="relative flex items-center justify-center py-2 px-2 rounded text-primary-foreground hover:bg-accent hover:text-accent-foreground transition" tabIndex={0} aria-label="Carrinho">
+            <MdShoppingCart className="w-7 h-7" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs font-bold rounded-full px-1.5 py-0.5 border-2 border-background min-w-[20px] text-center select-none">
+                {cartCount}
+              </span>
+            )}
+          </Link>
                 {user ? (
                   <div className="flex items-center gap-2 mt-4">
                     <Avatar>
@@ -90,9 +110,14 @@ export const Navbar: React.FC = () => {
           <Button asChild variant="ghost" size="sm" className="text-primary-foreground hover:bg-accent hover:text-accent-foreground">
             <Link href="/products">Produtos</Link>
           </Button>
-          <Button asChild variant="ghost" size="sm" className="text-primary-foreground hover:bg-accent hover:text-accent-foreground">
-            <Link href="/cart">Carrinho</Link>
-          </Button>
+          <Link href="/cart" className="relative flex items-center justify-center py-2 px-2 rounded text-primary-foreground hover:bg-accent hover:text-accent-foreground transition" tabIndex={0} aria-label="Carrinho">
+            <MdShoppingCart className="w-7 h-7" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs font-bold rounded-full px-1.5 py-0.5 border-2 border-background min-w-[20px] text-center select-none">
+                {cartCount}
+              </span>
+            )}
+          </Link>
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

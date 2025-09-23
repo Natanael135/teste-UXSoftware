@@ -123,13 +123,13 @@ export default function ProductsPage() {
   // (Removido: declaração duplicada de hasSearch)
   return (
     <>
-      <Container className="py-12">
+  <Container className="py-4 md:py-8">
         {/* Só mostra destaque e título se não estiver pesquisando */}
         {!hasSearch && featured.length > 0 && (
           <FeaturedCarousel products={featured.map(p => ({ ...p, description: p.description || "" }))} />
         )}
         {!hasSearch && (
-          <div className="mb-8 text-center">
+          <div className="mb-4 text-center">
             <h1 className="text-3xl font-extrabold tracking-tight text-primary drop-shadow-lg animate-fade-in">Produtos em Destaque</h1>
             <p className="text-muted-foreground mt-2 animate-fade-in delay-100">Confira as melhores ofertas do nosso marketplace!</p>
           </div>
