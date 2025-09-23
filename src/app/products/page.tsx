@@ -126,7 +126,7 @@ export default function ProductsPage() {
   <Container className="py-4 md:py-8">
         {/* Só mostra destaque e título se não estiver pesquisando */}
         {!hasSearch && featured.length > 0 && (
-          <FeaturedCarousel products={featured.map(p => ({ ...p, description: p.description || "" }))} />
+          <FeaturedCarousel products={featured.map(p => ({ ...p, description: p.description || "", image: p.image || "" }))} />
         )}
         {!hasSearch && (
           <div className="mb-4 text-center">
