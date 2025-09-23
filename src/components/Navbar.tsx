@@ -61,7 +61,7 @@ export const Navbar: React.FC = () => {
         </div>
         {/* Logo à esquerda */}
         <div className="flex-1 flex justify-end md:justify-start min-w-[120px]">
-          <Link href="/" className="text-xl font-extrabold tracking-tight text-primary-foreground drop-shadow-sm hover:text-accent transition-colors">UX <span className="text-accent">Marketplace</span></Link>
+          <Link href="/" className="text-2xl md:text-3xl font-extrabold tracking-tight text-primary-foreground drop-shadow-sm hover:text-accent transition-colors">UX <span className="text-accent">Marketplace</span></Link>
         </div>
 
         {/* Barra de busca centralizada, integrada ao header, estilo Magalu */}

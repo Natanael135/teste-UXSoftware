@@ -31,7 +31,7 @@ export const FeaturedCarousel: React.FC<FeaturedCarouselProps> = ({ products }) 
         instanceRef.current.next();
       }
     }
-    timer.current = setInterval(next, 3500);
+    timer.current = setInterval(next, 5000);
     return clear;
   }, [instanceRef, products.length]);
 
