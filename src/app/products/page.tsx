@@ -156,7 +156,7 @@ export default function ProductsPage() {
                 id={product.id}
                 name={product.name}
                 price={product.price}
-                image={product.imageUrl || product.image}
+                image={product.image}
                 description={product.description}
                 onAddToCart={() => handleAddToCart(product)}
                 animationDelay={idx * 80}
