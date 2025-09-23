@@ -1,3 +1,4 @@
+import { AppImage } from "@/components/AppImage";
 import React from "react";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
@@ -30,9 +31,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         className="flex justify-center items-center mb-2 focus:outline-none"
         style={{ minHeight: 160 }}
       >
-        <img
+        <AppImage
           src={image}
           alt={name}
+          width={220}
+          height={160}
           className="object-cover rounded group-hover:scale-105 transition-transform duration-300 bg-background"
           style={{ height: 160, width: '100%', maxWidth: 220, objectFit: 'cover' }}
         />

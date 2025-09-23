@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { AppImage } from "@/components/AppImage";
 
 export interface FeaturedProductProps {
   id: string;
@@ -35,7 +36,7 @@ export const FeaturedProduct: React.FC<FeaturedProductProps> = ({
         </div>
       </div>
       <div className="flex-1 flex justify-center items-center">
-        <img src={image} alt={name} className="rounded-xl shadow-lg max-h-72 w-auto object-contain bg-card" />
+  <AppImage src={image} alt={name} width={320} height={288} className="rounded-xl shadow-lg max-h-72 w-auto object-contain bg-card" />
       </div>
     </section>
   );

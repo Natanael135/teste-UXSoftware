@@ -1,3 +1,5 @@
+// Tipo auxiliar para erro mockado com response
+type MockApiError = Error & { response?: { data?: { message?: string }, status?: number } };
 // Produto em destaque mock
 const featuredProducts = [
   {
@@ -158,7 +160,7 @@ export const api = {
     }
     throw new Error("Endpoint não implementado no mock");
   },
-  post: async (url: string, data: any) => {
+  post: async (url: string, data: Record<string, unknown>) => {
     if (url === "/auth/login") {
       if (data.email === "admin@admin.com" && data.password === "123456") {
         // Mock de usuário autenticado
@@ -173,25 +175,34 @@ export const api = {
           }
         };
       }
-      const error: any = new Error("Credenciais inválidas");
-      error.response = { data: { message: "Credenciais inválidas" }, status: 401 };
+      const error: MockApiError = Object.assign(new Error("Credenciais inválidas"), {
+        response: { data: { message: "Credenciais inválidas" }, status: 401 }
+      });
       throw error;
     }
     if (url === "/users") {
       if (data.cpf === "000.000.000-00") {
-        const error: any = new Error("CPF já cadastrado");
-        error.response = { data: { message: "CPF já cadastrado" }, status: 409 };
+        const error: MockApiError = Object.assign(new Error("CPF já cadastrado"), {
+          response: { data: { message: "CPF já cadastrado" }, status: 409 }
+        });
         throw error;
       }
       return { data: { ...data, id: String(Date.now()) } };
     }
     if (url === "/products") {
-      mockProducts.push({ ...data, id: String(Date.now()) });
+      // Garantir que todos os campos obrigatórios estejam presentes
+      const requiredFields = ["name", "price", "image", "description", "category", "brand", "rating", "freeShipping", "color", "stock"];
+      const isValid = requiredFields.every(f => f in data);
+      if (isValid) {
+        mockProducts.push({ ...(data as typeof mockProducts[number]), id: String(Date.now()) });
+      } else {
+        throw new Error("Dados de produto incompletos");
+      }
       return { data };
     }
     throw new Error("Endpoint não implementado no mock");
   },
-  put: async (url: string, data: any) => {
+  put: async (url: string, data: Record<string, unknown>) => {
     if (url.startsWith("/products/")) {
       const id = url.split("/").pop();
       const idx = mockProducts.findIndex((p) => p.id === id);

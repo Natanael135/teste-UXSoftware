@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 interface ProductModalProps {
   open: boolean;
   onClose: () => void;
-  initialData?: any;
+  initialData?: Record<string, unknown>;
   onSuccess: () => void;
 }
 
@@ -31,7 +31,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, initi
     }
   }, [open, initialData, reset]);
 
-  async function onSubmit(data: any) {
+  async function onSubmit(data: Record<string, unknown>) {
     setLoading(true);
     try {
       if (isEdit) {
@@ -43,8 +43,12 @@ export const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, initi
       }
       onSuccess();
       onClose();
-    } catch (err: any) {
-      showError(err?.response?.data?.message || "Erro ao salvar produto");
+  } catch (err: unknown) {
+      if (typeof err === "object" && err && "response" in err && err.response && typeof err.response === "object" && "data" in err.response && err.response.data && typeof err.response.data === "object" && "message" in err.response.data) {
+        showError((err.response.data as { message?: string }).message || "Erro ao salvar produto");
+      } else {
+        showError("Erro ao salvar produto");
+      }
     } finally {
       setLoading(false);
     }

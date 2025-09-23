@@ -20,15 +20,19 @@ export default function LoginPage() {
   } = useLoginForm();
 
   const login = useAuthStore((s) => s.login);
-  async function onSubmit(data: any) {
+  async function onSubmit(data: Record<string, unknown>) {
     setLoading(true);
     try {
       const res = await api.post("/auth/login", data);
-      login(res.data.user, res.data.token);
+  login(res.data.user as import("@/store/auth").User, res.data.token as string);
       showSuccess("Login realizado com sucesso!");
       router.push("/");
-    } catch (err: any) {
-      showError(err?.response?.data?.message || "Erro ao fazer login");
+  } catch (err: unknown) {
+      if (typeof err === "object" && err && "response" in err && err.response && typeof err.response === "object" && "data" in err.response && err.response.data && typeof err.response.data === "object" && "message" in err.response.data) {
+        showError((err.response.data as { message?: string }).message || "Erro ao fazer login");
+      } else {
+        showError("Erro ao fazer login");
+      }
     } finally {
       setLoading(false);
     }

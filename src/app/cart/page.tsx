@@ -1,3 +1,4 @@
+import { AppImage } from "@/components/AppImage";
 "use client";
 import { useCartStore } from "@/contexts/cart";
 import { showSuccess } from "@/utils/toast";
@@ -24,9 +25,11 @@ export default function CartPage() {
           {items.map((item) => (
             <div key={item.id} className="flex items-center gap-6 border-b border-border pb-6 py-6 min-h-[110px]">
               {item.image && (
-                <img
+                <AppImage
                   src={item.image}
                   alt={item.name}
+                  width={96}
+                  height={96}
                   className="h-24 w-24 object-cover rounded shadow-sm border bg-background"
                   style={{ objectFit: 'cover' }}
                 />
