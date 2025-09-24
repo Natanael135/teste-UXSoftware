@@ -9,6 +9,8 @@ import { Container } from "@/components/Container";
 import { showError, showSuccess } from "@/utils/toast";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductFilters } from "@/components/ProductFilters";
+// import { useState } from "react"; // Removido duplicado
+import { Filter } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { useAuthStore } from "@/store/auth";
 import Link from "next/link";
@@ -29,6 +31,7 @@ interface Product {
 }
 
 export default function ProductsPage() {
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const search = useSearchStore((s) => s.search);
@@ -147,18 +150,12 @@ export default function ProductsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <Container className="py-4 md:py-8">
-        {/* Só mostra destaque e título se não estiver pesquisando */}
-        {/* Destaque desativado pois não há endpoint, adapte se necessário */}
-        {/* {!hasSearch && featured.length > 0 && (
-          <FeaturedCarousel products={featured.map(p => ({ ...p, description: p.description || "", image: p.imageUrl || p.image || "" }))} />
-        )} */}
-        {!hasSearch && (
-          <div className="mb-4 text-center">
-            <h1 className="text-3xl font-extrabold tracking-tight text-primary drop-shadow-lg animate-fade-in">Produtos em Destaque</h1>
-            <p className="text-muted-foreground mt-2 animate-fade-in delay-100">Confira as melhores ofertas do nosso marketplace!</p>
-          </div>
-        )}
+      {/* Layout flex para sidebar e conteúdo principal */}
+      {/* Layout flex para sidebar e conteúdo principal */}
+  <div className="flex min-h-full flex-1">
+    {/* Sidebar lateral fora do Container, sem padding */}
+    <aside className="hidden lg:block w-64 shrink-0 h-full flex flex-col bg-background/95 border-r border-border animate-fade-in">
+      <div className="flex-1 overflow-y-auto p-6">
         <ProductFilters
           minPrice={minPrice} setMinPrice={setMinPrice}
           maxPrice={maxPrice} setMaxPrice={setMaxPrice}
@@ -169,42 +166,94 @@ export default function ProductsPage() {
           freeShipping={freeShipping} setFreeShipping={setFreeShipping}
           sort={sort} setSort={setSort}
         />
-        {hasSearch && debouncedSearch.trim().length > 0 && (
-          <div className="mb-6 text-lg text-muted-foreground animate-fade-in">
-            Resultado para <span className="font-semibold text-accent">&quot;{debouncedSearch}&quot;</span>
-          </div>
-        )}
-        {(loading || isDebouncing) ? (
-          <div className="text-center text-muted-foreground">Carregando...</div>
-        ) : filteredProducts.length === 0 ? (
-          <div className="text-center text-muted-foreground">Nenhum produto encontrado.</div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {filteredProducts.map((product, idx) => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                name={product.name}
-                price={product.price}
-                image={
-                  product.imageUrl
-                    ? product.imageUrl.includes('/uploads/')
-                      ? product.imageUrl
-                      : product.imageUrl.replace(
-                          /onrender\.com\/?(uploads\/)?/,
-                          'onrender.com/uploads/'
-                        )
-                    : product.image
-                }
-                imageUrl={product.imageUrl}
-                description={product.description}
-                onAddToCart={() => handleAddToCart(product)}
-                animationDelay={idx * 80}
-              />
-            ))}
-          </div>
-        )}
-      </Container>
+      </div>
+    </aside>
+    {/* Conteúdo principal centralizado, com padding apenas no Container */}
+    <div className="flex-1 h-full flex flex-col">
+      <Container className="relative h-full">
+            {/* Título e subtítulo centralizados */}
+            {!hasSearch && (
+              <div className="mb-4 text-center">
+                <h1 className="text-3xl font-extrabold tracking-tight text-primary drop-shadow-lg animate-fade-in">Produtos em Destaque</h1>
+                <p className="text-muted-foreground mt-2 animate-fade-in delay-100">Confira as melhores ofertas do nosso marketplace!</p>
+              </div>
+            )}
+            {hasSearch && debouncedSearch.trim().length > 0 && (
+              <div className="mb-6 text-lg text-muted-foreground animate-fade-in">
+                Resultado para <span className="font-semibold text-accent">&quot;{debouncedSearch}&quot;</span>
+              </div>
+            )}
+            {/* Botão de filtro mobile acima do conteúdo */}
+            <div className="lg:hidden w-full mb-4">
+              <Dialog open={showMobileFilters} onOpenChange={setShowMobileFilters}>
+                <button
+                  className="flex items-center gap-2 px-4 py-2 rounded bg-accent text-accent-foreground font-semibold shadow hover:bg-primary hover:text-primary-foreground transition"
+                  onClick={() => setShowMobileFilters(true)}
+                  type="button"
+                >
+                  <Filter size={20} />
+                  <span>Filtros</span>
+                </button>
+                <DialogContent className="w-[95vw] max-w-sm max-h-[70vh] overflow-y-auto mx-auto rounded-xl p-6 shadow-lg border border-border flex flex-col items-center justify-center">
+                  <DialogTitle className="text-lg font-bold mb-4 text-foreground">Filtros</DialogTitle>
+                  <div className="flex flex-col gap-6 w-full py-2">
+                    <ProductFilters
+                      minPrice={minPrice} setMinPrice={setMinPrice}
+                      maxPrice={maxPrice} setMaxPrice={setMaxPrice}
+                      category={category} setCategory={setCategory} categories={categories}
+                      brand={brand} setBrand={setBrand} brands={brands}
+                      color={color} setColor={setColor} colors={colors}
+                      minRating={minRating} setMinRating={setMinRating}
+                      freeShipping={freeShipping} setFreeShipping={setFreeShipping}
+                      sort={sort} setSort={setSort}
+                      inline
+                    />
+                    <button
+                      className="mt-6 w-full bg-primary text-primary-foreground font-semibold rounded-lg py-2 shadow border border-accent hover:bg-accent hover:text-accent-foreground transition"
+                      onClick={() => setShowMobileFilters(false)}
+                    >
+                      Aplicar filtros
+                    </button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+            {/* Conteúdo principal */}
+            <main>
+              {(loading || isDebouncing) ? (
+                <div className="text-center text-muted-foreground">Carregando...</div>
+              ) : filteredProducts.length === 0 ? (
+                <div className="text-center text-muted-foreground">Nenhum produto encontrado.</div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                  {filteredProducts.map((product, idx) => (
+                    <ProductCard
+                      key={product.id}
+                      id={product.id}
+                      name={product.name}
+                      price={product.price}
+                      image={
+                        product.imageUrl
+                          ? product.imageUrl.includes('/uploads/')
+                            ? product.imageUrl
+                            : product.imageUrl.replace(
+                                /onrender\.com\/?(uploads\/)?/,
+                                'onrender.com/uploads/'
+                              )
+                          : product.image
+                      }
+                      imageUrl={product.imageUrl}
+                      description={product.description}
+                      onAddToCart={() => handleAddToCart(product)}
+                      animationDelay={idx * 80}
+                    />
+                  ))}
+                </div>
+              )}
+            </main>
+          </Container>
+        </div>
+      </div>
     </>
   );
 }

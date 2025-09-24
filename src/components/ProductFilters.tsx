@@ -1,6 +1,7 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogTrigger, DialogContent, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogClose, DialogTitle } from "@/components/ui/dialog";
+import { useState } from "react";
 
 interface ProductFiltersProps {
   minPrice: string;
@@ -22,6 +23,7 @@ interface ProductFiltersProps {
   setFreeShipping: (v: boolean) => void;
   sort: string;
   setSort: (v: string) => void;
+  inline?: boolean;
 }
 
 export const ProductFilters: React.FC<ProductFiltersProps> = ({
@@ -34,12 +36,13 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
   minRating, setMinRating,
   freeShipping, setFreeShipping,
   sort, setSort,
+  inline = false,
 }) => {
 
   // Filtros JSX
   const filtersContent = (
     <>
-      <div className="flex flex-col gap-2 w-full md:w-1/5">
+  <div className="flex flex-col gap-2 w-full">
   <label className="text-xs font-semibold text-foreground">Categoria</label>
   <select value={category} onChange={e => setCategory(e.target.value)} className="border border-input rounded px-2 py-1 text-sm bg-background text-foreground focus:border-accent focus:ring-1 focus:ring-accent transition">
           <option value="">Todas</option>
@@ -48,7 +51,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
           ))}
         </select>
       </div>
-      <div className="flex flex-col gap-2 w-full md:w-1/5">
+  <div className="flex flex-col gap-2 w-full">
   <label className="text-xs font-semibold text-foreground">Marca</label>
   <select value={brand} onChange={e => setBrand(e.target.value)} className="border border-input rounded px-2 py-1 text-sm bg-background text-foreground focus:border-accent focus:ring-1 focus:ring-accent transition">
           <option value="">Todas</option>
@@ -57,7 +60,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
           ))}
         </select>
       </div>
-      <div className="flex flex-col gap-2 w-full md:w-1/6">
+  <div className="flex flex-col gap-2 w-full">
   <label className="text-xs font-semibold text-foreground">Cor</label>
   <select value={color} onChange={e => setColor(e.target.value)} className="border border-input rounded px-2 py-1 text-sm bg-background text-foreground focus:border-accent focus:ring-1 focus:ring-accent transition">
           <option value="">Todas</option>
@@ -66,7 +69,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
           ))}
         </select>
       </div>
-      <div className="flex flex-col gap-2 w-24">
+  <div className="flex flex-col gap-2 w-full">
   <label className="text-xs font-semibold text-foreground">Preço mín.</label>
         <Input
           type="number"
@@ -76,7 +79,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
           onChange={e => setMinPrice(e.target.value)}
         />
       </div>
-      <div className="flex flex-col gap-2 w-24">
+  <div className="flex flex-col gap-2 w-full">
   <label className="text-xs font-semibold text-foreground">Preço máx.</label>
         <Input
           type="number"
@@ -86,7 +89,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
           onChange={e => setMaxPrice(e.target.value)}
         />
       </div>
-      <div className="flex flex-col gap-2 w-24">
+  <div className="flex flex-col gap-2 w-full">
   <label className="text-xs font-semibold text-foreground">Avaliação</label>
   <select value={minRating} onChange={e => setMinRating(e.target.value)} className="border border-input rounded px-2 py-1 text-sm bg-background text-foreground focus:border-accent focus:ring-1 focus:ring-accent transition">
           <option value="">Todas</option>
@@ -95,13 +98,13 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
           <option value="3.5">3.5+</option>
         </select>
       </div>
-      <div className="flex flex-col gap-2 w-24">
+  <div className="flex flex-col gap-2 w-full">
   <label className="text-xs font-semibold text-foreground">Frete grátis</label>
   <label className="flex items-center gap-1 text-xs cursor-pointer select-none text-foreground">
           <input type="checkbox" checked={freeShipping} onChange={e => setFreeShipping(e.target.checked)} /> Sim
         </label>
       </div>
-      <div className="flex flex-col gap-2 w-32">
+  <div className="flex flex-col gap-2 w-full">
   <label className="text-xs font-semibold text-foreground">Ordenar por</label>
   <select value={sort} onChange={e => setSort(e.target.value)} className="border border-input rounded px-2 py-1 text-sm bg-background text-foreground focus:border-accent focus:ring-1 focus:ring-accent transition">
           <option value="relevance">Relevância</option>
@@ -113,29 +116,23 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
     </>
   );
 
-  // Mobile: botão + modal | Desktop: filtros expandidos
+  // Mobile: se inline, renderiza só os filtros direto (sem modal/botão)
+  // Desktop: sempre renderiza direto
   return (
     <div className="w-full mb-8 animate-fade-in delay-150">
-      {/* Mobile: botão para abrir modal de filtros */}
-      <div className="block md:hidden">
-        <Dialog>
-          <DialogTrigger asChild>
-            <button className="w-full bg-primary text-primary-foreground font-semibold rounded-lg py-2 shadow border border-accent mb-2 hover:bg-accent hover:text-accent-foreground transition">Filtrar produtos</button>
-          </DialogTrigger>
-          <DialogContent className="max-w-md w-full">
-            <h2 className="text-lg font-bold mb-4 text-foreground">Filtros</h2>
-            <div className="flex flex-col gap-4">{filtersContent}</div>
-            <DialogClose asChild>
-              <button className="mt-6 w-full bg-primary text-primary-foreground font-semibold rounded-lg py-2 shadow border border-accent hover:bg-accent hover:text-accent-foreground transition">Aplicar filtros</button>
-            </DialogClose>
-          </DialogContent>
-        </Dialog>
-      </div>
-      {/* Desktop: filtros expandidos */}
-  <div className="hidden md:flex rounded-lg bg-background/80 shadow-lg border border-border p-4 flex-row items-end gap-4">
+      {/* Mobile: renderização condicional */}
+      {inline && (
+        <div className="block md:hidden">
+          {filtersContent}
+        </div>
+      )}
+      {/* Desktop: filtros expandidos em coluna (sidebar) */}
+      <div className="hidden md:flex flex-col gap-4 w-full">
         {filtersContent}
       </div>
     </div>
   );
 
 };
+
+// (MobileFiltersModal removido)

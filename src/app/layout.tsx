@@ -33,11 +33,15 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-950 min-h-screen flex flex-col`}
       >
         <CartProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
+        <Navbar />
+       
+          <main className="flex-1 flex h-full">{children}</main>
+         
+          <Footer />
+           <Toaster />
         </CartProvider>
-        <Footer />
-        <Toaster />
+        
+       
       </body>
     </html>
   );

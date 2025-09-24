@@ -5,7 +5,7 @@ import { FooterContact } from './FooterContact';
 
 export function Footer() {
   return (
-    <footer className="bg-background border-t border-border pt-10 pb-4 mt-8" aria-label="Rodapé">
+    <footer className="bg-background border-t border-border pt-10 pb-4" aria-label="Rodapé">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:flex-wrap md:justify-between gap-y-8 md:gap-y-0 gap-8 md:gap-12">
           <FooterLogo />
