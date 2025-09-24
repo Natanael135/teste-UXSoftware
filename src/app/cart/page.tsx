@@ -9,6 +9,9 @@ import type { Cart, CartItem } from "@/contexts/cartApi";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { Trash2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
 export default function CartPage() {
@@ -74,7 +77,9 @@ export default function CartPage() {
                             </div>
                           </div>
                         </td>
-                        <td className="p-4 text-center align-middle font-semibold text-green-700 whitespace-nowrap">Frete Grátis</td>
+                        <td className="p-4 text-center align-middle font-semibold text-green-700 whitespace-nowrap">
+                          <Badge variant="secondary">Frete Grátis</Badge>
+                        </td>
                         <td className="p-4 text-center align-middle whitespace-nowrap">
                           <div className="flex flex-col items-center">
                             <span className="line-through text-xs text-muted-foreground">R$ {(item.product.price * 1.07).toFixed(2)}</span>
@@ -106,8 +111,8 @@ export default function CartPage() {
                             await removeProduct(item.product.id);
                             showSuccess(`Produto removido do carrinho!`);
                           }}>
+                            <Trash2 className="h-4 w-4" />
                             <span className="sr-only">Remover</span>
-                            🗑️
                           </Button>
                         </td>
                       </tr>
@@ -141,17 +146,20 @@ export default function CartPage() {
                     <span>Subtotal</span>
                     <span>R$ {subtotal.toFixed(2)}</span>
                   </div>
+                  <Separator />
                   <div className="flex justify-between text-base">
                     <span>Descontos</span>
                     <span className="text-green-700">- R$ {descontos.toFixed(2)}</span>
                   </div>
+                  <Separator />
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total</span>
                     <span className="text-accent">R$ {total.toFixed(2)}</span>
                   </div>
                 </div>
                 <Button className="w-full h-12 text-lg font-bold bg-accent hover:bg-primary text-white rounded-lg mt-2">
-                  <span className="mr-2">🛒</span> FINALIZAR COMPRA
+                  <ShoppingCart className="h-5 w-5 mr-2" />
+                  FINALIZAR COMPRA
                 </Button>
               </CardContent>
             </Card>

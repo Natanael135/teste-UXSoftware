@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useCart } from "@/contexts/cartApi";
 import { showSuccess } from "@/utils/toast";
 import type { Product } from "@/types/product";
+import { ShoppingCart } from "lucide-react";
 // ...existing code... (Input import removed, not used)
 
 export default function ProductDetailPage() {
@@ -102,7 +103,8 @@ export default function ProductDetailPage() {
                     await addProduct(product.id, quantity);
                     window.location.href = "/cart";
                   }}>
-                    <span className="mr-2">🛒</span> COMPRAR
+                    <ShoppingCart className="h-5 w-5 mr-2" />
+                    COMPRAR
                   </Button>
                   <Button variant="outline" className="w-full h-10 text-base font-semibold mt-1" onClick={async () => {
                     await addProduct(product.id, quantity);

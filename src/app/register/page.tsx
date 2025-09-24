@@ -1,5 +1,4 @@
 "use client";
-"use client";
 import { useRegisterForm } from "@/hooks/useRegisterForm";
 import type { RegisterFormData } from "@/hooks/useRegisterSchema";
 import { api } from "@/services/api";
@@ -8,18 +7,22 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Container } from "@/components/Container";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { mask } from "remask";
 
 export default function RegisterPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useRegisterForm();
+  const form = useRegisterForm();
 
   async function onSubmit(data: RegisterFormData) {
     setLoading(true);
@@ -42,93 +45,119 @@ export default function RegisterPage() {
   return (
     <Container className="max-w-md py-12">
       <h1 className="text-2xl font-bold mb-6 text-center text-primary">Cadastro</h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label className="block mb-1 text-foreground">CPF</label>
-          <Input
-            type="text"
-            {...register("cpf", {
-              onChange: (e) => {
-                e.target.value = mask(e.target.value, ["999.999.999-99"]);
-              },
-            })}
-            placeholder="000.000.000-00"
-            autoComplete="off"
-            aria-invalid={!!errors.cpf}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="cpf"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>CPF</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    {...field}
+                    onChange={(e) => field.onChange(mask(e.target.value, "999.999.999-99"))}
+                    placeholder="000.000.000-00"
+                    autoComplete="off"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          {errors.cpf && (
-            <span className="text-accent text-sm">{errors.cpf.message}</span>
-          )}
-        </div>
-        <div>
-          <label className="block mb-1 text-foreground">Nome Completo</label>
-          <Input
-            type="text"
-            {...register("name")}
-            autoComplete="name"
-            aria-invalid={!!errors.name}
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nome Completo</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    {...field}
+                    autoComplete="name"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          {errors.name && (
-            <span className="text-accent text-sm">{errors.name.message}</span>
-          )}
-        </div>
-        <div>
-          <label className="block mb-1 text-foreground">E-mail</label>
-          <Input
-            type="email"
-            {...register("email")}
-            autoComplete="email"
-            aria-invalid={!!errors.email}
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>E-mail</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    {...field}
+                    autoComplete="email"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          {errors.email && (
-            <span className="text-accent text-sm">{errors.email.message}</span>
-          )}
-        </div>
-        <div>
-          <label className="block mb-1 text-foreground">Telefone</label>
-          <Input
-            type="text"
-            {...register("phone", {
-              onChange: (e) => {
-                e.target.value = mask(e.target.value, ["(99) 99999-9999"]);
-              },
-            })}
-            placeholder="(00) 00000-0000"
-            autoComplete="tel"
-            aria-invalid={!!errors.phone}
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Telefone</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    {...field}
+                    onChange={(e) => field.onChange(mask(e.target.value, "(99) 99999-9999"))}
+                    placeholder="(00) 00000-0000"
+                    autoComplete="tel"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          {errors.phone && (
-            <span className="text-accent text-sm">{errors.phone.message}</span>
-          )}
-        </div>
-        <div>
-          <label className="block mb-1 text-foreground">Senha</label>
-          <Input
-            type="password"
-            {...register("password")}
-            autoComplete="new-password"
-            aria-invalid={!!errors.password}
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Senha</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    {...field}
+                    autoComplete="new-password"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          {errors.password && (
-            <span className="text-accent text-sm">{errors.password.message}</span>
-          )}
-        </div>
-        <div>
-          <label className="block mb-1 text-foreground">Confirmar Senha</label>
-          <Input
-            type="password"
-            {...register("confirmPassword")}
-            autoComplete="new-password"
-            aria-invalid={!!errors.confirmPassword}
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirmar Senha</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    {...field}
+                    autoComplete="new-password"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          {errors.confirmPassword && (
-            <span className="text-accent text-sm">{errors.confirmPassword.message}</span>
-          )}
-        </div>
-        <Button type="submit" className="w-full mt-4 bg-primary text-primary-foreground font-semibold hover:bg-accent hover:text-accent-foreground transition" disabled={loading}>
-          {loading ? "Cadastrando..." : "Cadastrar"}
-        </Button>
-      </form>
+          <Button type="submit" className="w-full mt-4 bg-primary text-primary-foreground font-semibold hover:bg-accent hover:text-accent-foreground transition" disabled={loading}>
+            {loading ? "Cadastrando..." : "Cadastrar"}
+          </Button>
+        </form>
+      </Form>
       <div className="text-center mt-4">
         <Link href="/login" className="text-secondary hover:underline hover:text-accent transition-colors">
           Já tem conta? Entrar

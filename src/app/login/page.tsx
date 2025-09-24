@@ -7,17 +7,21 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuthStore } from "@/store/auth";
 import { Container } from "@/components/Container";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useLoginForm();
+  const form = useLoginForm();
 
   const login = useAuthStore((s) => s.login);
   async function onSubmit(data: Record<string, unknown>) {
@@ -46,35 +50,47 @@ export default function LoginPage() {
   return (
     <Container className="max-w-md py-12">
       <h1 className="text-2xl font-bold mb-6 text-center text-primary">Entrar</h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label className="block mb-1 text-foreground">E-mail</label>
-          <Input
-            type="email"
-            {...register("email")}
-            autoComplete="email"
-            aria-invalid={!!errors.email}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>E-mail</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    autoComplete="email"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          {errors.email && (
-            <span className="text-accent text-sm">{errors.email.message}</span>
-          )}
-        </div>
-        <div>
-          <label className="block mb-1 text-foreground">Senha</label>
-          <Input
-            type="password"
-            {...register("password")}
-            autoComplete="current-password"
-            aria-invalid={!!errors.password}
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Senha</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    autoComplete="current-password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          {errors.password && (
-            <span className="text-accent text-sm">{errors.password.message}</span>
-          )}
-        </div>
-        <Button type="submit" className="w-full mt-4 bg-primary text-primary-foreground font-semibold hover:bg-accent hover:text-accent-foreground transition" disabled={loading}>
-          {loading ? "Entrando..." : "Entrar"}
-        </Button>
-      </form>
+          <Button type="submit" className="w-full mt-4 bg-primary text-primary-foreground font-semibold hover:bg-accent hover:text-accent-foreground transition" disabled={loading}>
+            {loading ? "Entrando..." : "Entrar"}
+          </Button>
+        </form>
+      </Form>
       <div className="text-center mt-4">
         <Link href="/register" className="text-secondary hover:underline hover:text-accent transition-colors">
           Não tem conta? Cadastre-se

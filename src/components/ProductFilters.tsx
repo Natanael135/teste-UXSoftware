@@ -1,5 +1,13 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface ProductFiltersProps {
   minPrice: string;
@@ -41,32 +49,47 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
   const filtersContent = (
     <>
   <div className="flex flex-col gap-2 w-full">
-  <label className="text-xs font-semibold text-foreground">Categoria</label>
-  <select value={category} onChange={e => setCategory(e.target.value)} className="border border-input rounded px-2 py-1 text-sm bg-background text-foreground focus:border-accent focus:ring-1 focus:ring-accent transition">
-          <option value="">Todas</option>
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>{cat}</option>
-          ))}
-        </select>
-      </div>
+    <label className="text-xs font-semibold text-foreground">Categoria</label>
+    <Select value={category || "all"} onValueChange={(value) => setCategory(value === "all" ? "" : value)}>
+      <SelectTrigger className="w-full">
+        <SelectValue placeholder="Todas" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="all">Todas</SelectItem>
+        {categories.map((cat) => (
+          <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  </div>
   <div className="flex flex-col gap-2 w-full">
   <label className="text-xs font-semibold text-foreground">Marca</label>
-  <select value={brand} onChange={e => setBrand(e.target.value)} className="border border-input rounded px-2 py-1 text-sm bg-background text-foreground focus:border-accent focus:ring-1 focus:ring-accent transition">
-          <option value="">Todas</option>
-          {brands.map((b) => (
-            <option key={b} value={b}>{b}</option>
-          ))}
-        </select>
-      </div>
+  <Select value={brand || "all"} onValueChange={(value) => setBrand(value === "all" ? "" : value)}>
+    <SelectTrigger className="w-full">
+      <SelectValue placeholder="Todas" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="all">Todas</SelectItem>
+      {brands.map((b) => (
+        <SelectItem key={b} value={b}>{b}</SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+  </div>
   <div className="flex flex-col gap-2 w-full">
   <label className="text-xs font-semibold text-foreground">Cor</label>
-  <select value={color} onChange={e => setColor(e.target.value)} className="border border-input rounded px-2 py-1 text-sm bg-background text-foreground focus:border-accent focus:ring-1 focus:ring-accent transition">
-          <option value="">Todas</option>
-          {colors.map((c) => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
-      </div>
+  <Select value={color || "all"} onValueChange={(value) => setColor(value === "all" ? "" : value)}>
+    <SelectTrigger className="w-full">
+      <SelectValue placeholder="Todas" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="all">Todas</SelectItem>
+      {colors.map((c) => (
+        <SelectItem key={c} value={c}>{c}</SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+  </div>
   <div className="flex flex-col gap-2 w-full">
   <label className="text-xs font-semibold text-foreground">Preço mín.</label>
         <Input
@@ -89,28 +112,45 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
       </div>
   <div className="flex flex-col gap-2 w-full">
   <label className="text-xs font-semibold text-foreground">Avaliação</label>
-  <select value={minRating} onChange={e => setMinRating(e.target.value)} className="border border-input rounded px-2 py-1 text-sm bg-background text-foreground focus:border-accent focus:ring-1 focus:ring-accent transition">
-          <option value="">Todas</option>
-          <option value="4.5">4.5+</option>
-          <option value="4.0">4.0+</option>
-          <option value="3.5">3.5+</option>
-        </select>
-      </div>
+  <Select value={minRating || "all"} onValueChange={(value) => setMinRating(value === "all" ? "" : value)}>
+    <SelectTrigger className="w-full">
+      <SelectValue placeholder="Todas" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="all">Todas</SelectItem>
+      <SelectItem value="4.5">4.5+</SelectItem>
+      <SelectItem value="4.0">4.0+</SelectItem>
+      <SelectItem value="3.5">3.5+</SelectItem>
+    </SelectContent>
+  </Select>
+  </div>
   <div className="flex flex-col gap-2 w-full">
   <label className="text-xs font-semibold text-foreground">Frete grátis</label>
-  <label className="flex items-center gap-1 text-xs cursor-pointer select-none text-foreground">
-          <input type="checkbox" checked={freeShipping} onChange={e => setFreeShipping(e.target.checked)} /> Sim
-        </label>
-      </div>
+  <div className="flex items-center gap-2">
+    <Checkbox
+      id="freeShipping"
+      checked={freeShipping}
+      onCheckedChange={setFreeShipping}
+    />
+    <label htmlFor="freeShipping" className="text-xs cursor-pointer select-none text-foreground">
+      Sim
+    </label>
+  </div>
+  </div>
   <div className="flex flex-col gap-2 w-full">
   <label className="text-xs font-semibold text-foreground">Ordenar por</label>
-  <select value={sort} onChange={e => setSort(e.target.value)} className="border border-input rounded px-2 py-1 text-sm bg-background text-foreground focus:border-accent focus:ring-1 focus:ring-accent transition">
-          <option value="relevance">Relevância</option>
-          <option value="price-asc">Menor preço</option>
-          <option value="price-desc">Maior preço</option>
-          <option value="rating">Melhor avaliação</option>
-        </select>
-      </div>
+  <Select value={sort} onValueChange={setSort}>
+    <SelectTrigger className="w-full">
+      <SelectValue placeholder="Relevância" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="relevance">Relevância</SelectItem>
+      <SelectItem value="price-asc">Menor preço</SelectItem>
+      <SelectItem value="price-desc">Maior preço</SelectItem>
+      <SelectItem value="rating">Melhor avaliação</SelectItem>
+    </SelectContent>
+  </Select>
+  </div>
     </>
   );
 

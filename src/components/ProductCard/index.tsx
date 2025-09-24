@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ShoppingCart } from "lucide-react";
 
 interface ProductCardProps {
   id: string;
@@ -32,15 +33,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           href={`/products/${id}`}
           tabIndex={-1}
           className="flex justify-center items-center mb-2 focus:outline-none"
-          style={{ minHeight: 160 }}
         >
         <AppImage
           src={(imageUrl || image) ?? ""}
           alt={name}
-          width={220}
-          height={160}
-          className="object-cover rounded group-hover:scale-105 transition-transform duration-300 bg-background"
-          style={{ width: '100%', maxWidth: 220, height: 'auto', objectFit: 'cover' }}
+          width={180}
+          height={180}
+          className="object-cover rounded group-hover:scale-105 transition-transform duration-300 bg-background w-[90%] h-auto"
+          style={{ aspectRatio: '1/1' }}
         />
       </Link>
     )}
@@ -55,8 +55,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     </CardContent>
     <CardFooter className="flex gap-2 mt-2">
       {onAddToCart && (
-        <Button className="flex-1 bg-accent text-accent-foreground font-semibold hover:bg-primary hover:text-primary-foreground animate-bounce-once" onClick={onAddToCart}>
-          <span className="inline-block transition-transform group-hover:scale-110">🛒</span> Adicionar ao carrinho
+        <Button className="w-full bg-accent text-accent-foreground font-semibold hover:bg-primary hover:text-primary-foreground animate-bounce-once" onClick={onAddToCart}>
+          <ShoppingCart className="h-4 w-4 mr-2 inline-block transition-transform group-hover:scale-110" />
+          Adicionar ao carrinho
         </Button>
       )}
     </CardFooter>

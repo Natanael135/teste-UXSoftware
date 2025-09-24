@@ -6,12 +6,34 @@ import Link from "next/link";
 import { api } from "@/services/api";
 import { showError } from "@/utils/toast";
 import type { Product } from "@/types/product";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function AdminDashboard() {
   const [search, setSearch] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
+  const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
   const [editForm, setEditForm] = useState({
     name: "",
     price: "",
@@ -127,56 +149,72 @@ export default function AdminDashboard() {
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Dashboard do Administrador</h1>
       <div className="mb-4 flex gap-2">
-        <input
+        <Input
           type="text"
           placeholder="Buscar por nome ou código..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border rounded px-3 py-2 w-full"
         />
         <Link href="/admin/products/create" className="bg-primary text-white px-4 py-2 rounded font-semibold hover:bg-primary/90">Novo Produto</Link>
       </div>
-      <table className="w-full border rounded bg-white">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="p-2 text-left">ID</th>
-            <th className="p-2 text-left">Nome</th>
-            <th className="p-2 text-left">Preço</th>
-            <th className="p-2 text-left">Ações</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>ID</TableHead>
+            <TableHead>Nome</TableHead>
+            <TableHead>Preço</TableHead>
+            <TableHead>Ações</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {loading ? (
-            <tr><td colSpan={4} className="p-4 text-center text-muted-foreground">Carregando...</td></tr>
+            <TableRow>
+              <TableCell colSpan={4} className="text-center text-muted-foreground">Carregando...</TableCell>
+            </TableRow>
           ) : filtered.length === 0 ? (
-            <tr>
-              <td colSpan={4} className="p-4 text-center text-muted-foreground">Nenhum produto encontrado.</td>
-            </tr>
+            <TableRow>
+              <TableCell colSpan={4} className="text-center text-muted-foreground">Nenhum produto encontrado.</TableCell>
+            </TableRow>
           ) : filtered.map((p) => (
-            <tr key={p.id} className="border-t">
-              <td className="p-2">{p.id}</td>
-              <td className="p-2">{p.name}</td>
-              <td className="p-2">R$ {p.price}</td>
-              <td className="p-2 flex gap-2">
-                <button className="text-accent hover:underline" onClick={() => handleEditClick(p)}>Editar</button>
-                <button className="text-red-600 hover:underline" onClick={async () => {
-                  if (!confirm('Tem certeza que deseja excluir este produto?')) return;
-                  try {
-                    await api.delete(`/products/${p.id}`, undefined, true);
-                    setProducts((prev) => prev.filter(prod => prod.id !== p.id));
-                  } catch (e: unknown) {
-                    if (e instanceof Error) {
-                      showError(e.message || "Erro ao excluir produto");
-                    } else {
-                      showError("Erro ao excluir produto");
-                    }
-                  }
-                }}>Excluir</button>
-              </td>
-            </tr>
+            <TableRow key={p.id}>
+              <TableCell>{p.id}</TableCell>
+              <TableCell>{p.name}</TableCell>
+              <TableCell>R$ {p.price}</TableCell>
+              <TableCell className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={() => handleEditClick(p)}>Editar</Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="destructive" size="sm">Excluir</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Tem certeza que deseja excluir o produto &quot;{p.name}&quot;? Esta ação não pode ser desfeita.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction onClick={async () => {
+                        try {
+                          await api.delete(`/products/${p.id}`, undefined, true);
+                          setProducts((prev) => prev.filter(prod => prod.id !== p.id));
+                        } catch (e: unknown) {
+                          if (e instanceof Error) {
+                            showError(e.message || "Erro ao excluir produto");
+                          } else {
+                            showError("Erro ao excluir produto");
+                          }
+                        }
+                      }}>Excluir</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
       {/* Modal de edição */}
       <Dialog open={!!editProduct} onOpenChange={open => !open && setEditProduct(null)}>
         <DialogContent className="max-w-lg w-full p-0">
