@@ -39,7 +39,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           width={220}
           height={160}
           className="object-cover rounded group-hover:scale-105 transition-transform duration-300 bg-background"
-          style={{ height: 160, width: '100%', maxWidth: 220, objectFit: 'cover' }}
+          style={{ width: '100%', maxWidth: 220, height: 'auto', objectFit: 'cover' }}
         />
       </Link>
     )}

@@ -1,148 +1,151 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { api } from "@/services/api";
 import { Container } from "@/components/Container";
 import { Button } from "@/components/ui/button";
-import { useCartStore } from "@/contexts/cart";
+import { Card, CardContent } from "@/components/ui/card";
+import { useCart } from "@/contexts/cartApi";
 import { showSuccess } from "@/utils/toast";
-import type { Product, Comment } from "@/types/product";
+import type { Product } from "@/types/product";
+import { Input } from "@/components/ui/input";
 
 export default function ProductDetailPage() {
 
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [recommendations, setRecommendations] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const { addItem } = useCartStore();
-  // Estado para quantidade
-  const [quantity, setQuantity] = useState(1);
+  const { addProduct } = useCart();
+  const [quantity] = useState(1);
+  const images = React.useMemo(() => [product?.imageUrl || product?.image || "https://placehold.co/320x320?text=Sem+Imagem"], [product]);
+  const [mainImage, setMainImage] = useState<string>("");
+  useEffect(() => {
+    if (images && images.length > 0) setMainImage(images[0]);
+  }, [images]);
 
   useEffect(() => {
     api.get<Product>(`/products/${id}`)
       .then((res) => {
         setProduct(res || null);
-        setComments([]);
-        setRecommendations([]);
         setLoading(false);
       });
   }, [id]);
+
+  // Produtos reais para Compre Junto
+  const [compreJunto, setCompreJunto] = useState<Product[]>([]);
+  useEffect(() => {
+    api.get<{ products: Product[] }>("/products").then(res => {
+      if (res && Array.isArray(res.products)) {
+        // Pega até 3 produtos diferentes do atual
+        setCompreJunto(res.products.filter(p => p.id !== id).slice(0, 2));
+      }
+    });
+  }, [id]);
+
+  // Garante que o produto atual sempre seja o primeiro do Compre Junto
+  const compreJuntoProdutos = [product, ...compreJunto].filter((p, idx, arr) => p && arr.findIndex(x => x?.id === p?.id) === idx);
+
+  // Função para adicionar todos ao carrinho e redirecionar
+  const handleComprarJunto = async () => {
+    if (!product) return;
+    // Se o produto do Compre Junto for igual ao atual, soma a quantidade
+    let ids: Record<string, number> = { [product.id]: 1 };
+    for (const prod of compreJunto) {
+      if (ids[prod.id]) {
+        ids[prod.id] += 1;
+      } else {
+        ids[prod.id] = 1;
+      }
+    }
+    for (const pid in ids) {
+      await addProduct(pid, ids[pid]);
+    }
+    window.location.href = "/cart";
+  };
 
   if (loading) return <Container className="py-12 text-center text-muted-foreground">Carregando...</Container>;
   if (!product) return <Container className="py-12 text-center text-muted-foreground">Produto não encontrado.</Container>;
 
   return (
-    <Container className="py-12 max-w-3xl animate-fade-in">
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="flex-1 flex flex-col items-center">
-          <Image
-            src={
-              product.imageUrl?.trim() ? product.imageUrl :
-              product.image?.trim() ? product.image :
-              "https://placehold.co/320x320?text=Sem+Imagem"
-            }
-            alt={product.name}
-            width={320}
-            height={320}
-            className="rounded-lg shadow-lg w-full max-w-xs object-cover mb-4 bg-background"
-            unoptimized
-          />
-          {product.freeShipping && <span className="text-xs text-accent font-semibold">Frete grátis</span>}
+    <Container className="py-8 max-w-7xl animate-fade-in">
+      <div className="flex flex-col lg:flex-row gap-8">
+        {/* Galeria lateral */}
+        <div className="hidden lg:flex flex-col gap-2 items-center min-w-[80px]">
+          {images.map((img, idx) => (
+            <button key={img+idx} className={`border rounded-lg p-1 bg-background ${mainImage === img ? 'border-accent' : 'border-border'}`} onClick={() => setMainImage(img)}>
+              <Image src={img} alt={product.name} width={60} height={60} className="object-cover rounded w-14 h-14" unoptimized />
+            </button>
+          ))}
         </div>
-        <div className="flex-1 flex flex-col gap-3">
-          <h2 className="text-2xl font-bold mb-2 text-foreground drop-shadow-sm">{product.name}</h2>
-          <div className="text-lg text-accent font-bold mb-2">R$ {product.price.toFixed(2)}</div>
-          <div className="text-sm text-muted-foreground mb-2">{product.description}</div>
-          <div className="flex flex-wrap gap-2 text-xs mb-2">
-            <span className="bg-muted px-2 py-1 rounded text-foreground">Categoria: {product.category}</span>
-            <span className="bg-muted px-2 py-1 rounded text-foreground">Marca: {product.brand}</span>
-            <span className="bg-muted px-2 py-1 rounded text-foreground">Cor: {product.color}</span>
-            <span className="bg-muted px-2 py-1 rounded text-foreground">Estoque: {product.stock}</span>
-            <span className="bg-muted px-2 py-1 rounded text-foreground">Avaliação: {product.rating ?? "-"}</span>
-          </div>
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-sm">Quantidade:</span>
-            <button
-              type="button"
-              className="px-2 py-1 rounded bg-muted text-lg font-bold border border-input hover:bg-accent hover:text-accent-foreground transition"
-              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-              aria-label="Diminuir quantidade"
-            >-</button>
-            <input
-              type="number"
-              min={1}
-              max={product.stock || 99}
-              value={quantity}
-              onChange={e => setQuantity(Math.max(1, Math.min(Number(e.target.value), product.stock || 99)))}
-              className="w-16 text-center border border-input rounded h-9 bg-background text-foreground"
-              aria-label="Quantidade"
-            />
-            <button
-              type="button"
-              className="px-2 py-1 rounded bg-muted text-lg font-bold border border-input hover:bg-accent hover:text-accent-foreground transition"
-              onClick={() => setQuantity((q) => Math.min((product.stock || 99), q + 1))}
-              aria-label="Aumentar quantidade"
-            >+</button>
-          </div>
-          <Button className="bg-accent text-accent-foreground font-semibold hover:bg-primary hover:text-primary-foreground" onClick={() => { addItem({ ...product, quantity }); showSuccess("Produto adicionado ao carrinho!"); }}>
-            <span className="inline-block mr-2">🛒</span> Adicionar ao carrinho
-          </Button>
+        {/* Imagem principal */}
+        <div className="flex-1 flex flex-col items-center justify-center">
+          <Image src={mainImage} alt={product.name} width={380} height={380} className="rounded-lg shadow-lg w-full max-w-md object-contain bg-background" unoptimized />
         </div>
-      </div>
-
-      {/* Comentários */}
-      <div className="mt-10">
-        <h3 className="text-lg font-bold mb-3">Avaliações de clientes</h3>
-        {comments.length === 0 ? (
-          <div className="text-muted-foreground text-sm">Nenhum comentário ainda.</div>
-        ) : (
-          <div className="space-y-4">
-            {comments.map((c) => (
-              <div key={c.id} className="bg-muted/50 rounded p-3 flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-secondary">{c.user}</span>
-                  <span className="text-accent">{'★'.repeat(Math.round(c.rating))}{'☆'.repeat(5 - Math.round(c.rating))}</span>
+        {/* Resumo do produto */}
+        <div className="w-full lg:w-[420px]">
+          <Card className="p-0">
+            <CardContent className="p-6">
+              <div className="flex flex-col gap-2">
+                <span className="text-xs font-semibold text-green-700">-25,38%</span>
+                <div className="text-xs text-muted-foreground">Cod: {product.id}</div>
+                <div className="font-semibold text-foreground leading-tight">{product.name}</div>
+                <div className="text-xs text-muted-foreground">{product.description}</div>
+                <div className="flex flex-col gap-1 mt-2">
+                  <span className="line-through text-xs text-muted-foreground">de R$ {(product.price * 1.07).toFixed(2)}</span>
+                  <span className="text-2xl font-bold text-accent">por R$ {product.price.toFixed(2)} <span className="text-base font-normal">no PIX</span></span>
+                  <span className="text-xs text-muted-foreground">ou até 1x de R$ {product.price.toFixed(2)}</span>
+                  <span className="text-xs underline text-accent cursor-pointer">mais formas de pagamento</span>
                 </div>
-                {c.comment && <div className="text-sm text-muted-foreground">{c.comment}</div>}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Recomendações */}
-      {recommendations.length > 0 && (
-        <div className="mt-12">
-          <h3 className="text-lg font-bold mb-3">Você também pode gostar</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {recommendations.map((rec) => (
-              <div key={rec.id} className="bg-card rounded shadow p-3 flex gap-3 items-center border border-border">
-                <Image
-                  src={
-                    rec.imageUrl?.trim() ? rec.imageUrl :
-                    rec.image?.trim() ? rec.image :
-                    "https://placehold.co/80x80?text=Sem+Imagem"
-                  }
-                  alt={rec.name}
-                  width={80}
-                  height={80}
-                  className="w-20 h-20 object-cover rounded bg-background"
-                  unoptimized
-                />
-                <div className="flex-1">
-                  <div className="font-semibold text-sm mb-1 text-foreground">{rec.name}</div>
-                  <div className="text-accent font-bold text-base mb-1">R$ {rec.price.toFixed(2)}</div>
-                  <Button size="sm" className="bg-accent text-accent-foreground font-semibold hover:bg-primary hover:text-primary-foreground" onClick={() => { addItem({ ...rec, quantity: 1 }); showSuccess("Produto adicionado ao carrinho!"); }}>
-                    <span className="inline-block mr-1">🛒</span> Carrinho
+                <div className="flex flex-col gap-2 mt-2">
+                  <Button className="w-full h-12 text-lg font-bold bg-accent hover:bg-primary text-white rounded-lg" onClick={async () => {
+                    await addProduct(product.id, quantity);
+                    window.location.href = "/cart";
+                  }}>
+                    <span className="mr-2">🛒</span> COMPRAR
+                  </Button>
+                  <Button variant="outline" className="w-full h-10 text-base font-semibold mt-1" onClick={async () => {
+                    await addProduct(product.id, quantity);
+                    showSuccess("Produto adicionado ao carrinho!");
+                  }}>
+                    <span className="mr-2">➕</span> Adicionar ao carrinho
                   </Button>
                 </div>
+                <div className="text-xs text-muted-foreground mt-2">Vendido e entregue por <span className="font-semibold">UX Marketplace</span></div>
               </div>
-            ))}
-          </div>
+            </CardContent>
+          </Card>
         </div>
-      )}
+      </div>
+
+      {/* Compre Junto (produtos reais) */}
+      <div className="mt-12">
+        <h3 className="text-lg font-bold mb-3">Aproveite e Compre Junto</h3>
+        <div className="flex flex-wrap gap-4 items-stretch">
+          {compreJuntoProdutos.map((prod, idx) => (
+            <React.Fragment key={prod?.id}>
+              {idx > 0 && <div className="flex items-center justify-center text-3xl font-bold text-muted-foreground">+</div>}
+              <Card className="flex-1 min-w-[220px] max-w-xs flex flex-col items-center p-4">
+                <Image src={prod?.imageUrl || prod?.image || 'https://placehold.co/100x100?text=Produto'} alt={prod?.name || ''} width={100} height={100} className="object-cover rounded mb-2 bg-background" unoptimized />
+                <div className="font-semibold text-sm mb-1 text-foreground text-center">{prod?.name}</div>
+                <div className="text-accent font-bold text-base mb-1">R$ {prod?.price?.toFixed(2)} no PIX</div>
+              </Card>
+            </React.Fragment>
+          ))}
+          {/* Sinal de = e total */}
+          <div className="flex items-center justify-center text-3xl font-bold text-muted-foreground">=</div>
+          <Card className="flex flex-col items-center justify-center min-w-[220px] max-w-xs bg-muted/60 p-4">
+            <div className="font-semibold text-lg mb-2 text-center">Compre os {compreJuntoProdutos.length} produtos</div>
+            <div className="line-through text-xs text-muted-foreground">
+              R$ {compreJuntoProdutos.reduce((acc, p) => acc + (p?.price || 0) * 1.07, 0).toFixed(2)}
+            </div>
+            <div className="text-accent font-bold text-2xl mb-2">
+              R$ {compreJuntoProdutos.reduce((acc, p) => acc + (p?.price || 0), 0).toFixed(2)}
+            </div>
+            <Button className="w-full h-10 text-base font-bold bg-accent hover:bg-primary text-white rounded-lg mt-2" onClick={handleComprarJunto}>COMPRAR JUNTO</Button>
+          </Card>
+        </div>
+      </div>
     </Container>
   );
 }

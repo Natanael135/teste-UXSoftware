@@ -6,7 +6,7 @@ import { api } from "@/services/api";
 import { showError, showSuccess } from "@/utils/toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Container } from "@/components/Container";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ export default function RegisterPage() {
   async function onSubmit(data: RegisterFormData) {
     setLoading(true);
     try {
-      await api.post("/users", data);
+      await api.post("/auth/register", data);
       showSuccess("Cadastro realizado com sucesso!");
       router.push("/login");
     } catch (err: unknown) {

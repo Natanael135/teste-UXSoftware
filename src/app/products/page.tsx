@@ -1,15 +1,17 @@
 "use client";
 // Navbar é global, não importar aqui
 import { api } from "@/services/api";
-import { useCartStore } from "@/contexts/cart";
-import { useEffect, useState, useMemo } from "react";
+import { useCart } from "@/contexts/cartApi";
+import React, { useEffect, useState, useMemo } from "react";
 import { useSearchStore } from "@/store/search";
 import { useDebounce } from "@/hooks/useDebounce";
 import { Container } from "@/components/Container";
 import { showError, showSuccess } from "@/utils/toast";
 import { ProductCard } from "@/components/ProductCard";
-// ...existing code...
 import { ProductFilters } from "@/components/ProductFilters";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { useAuthStore } from "@/store/auth";
+import Link from "next/link";
 
 interface Product {
   id: string;
@@ -29,13 +31,11 @@ interface Product {
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  // ...existing code...
   const search = useSearchStore((s) => s.search);
   const debouncedSearch = useDebounce(search, 1000);
   const isDebouncing = search !== debouncedSearch;
   const hasSearch = search.trim().length > 0;
-  // Debug: log valores de busca
-  console.log('search:', search, '| debouncedSearch:', debouncedSearch, '| hasSearch:', hasSearch);
+  // ...
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [category, setCategory] = useState("");
@@ -44,14 +44,22 @@ export default function ProductsPage() {
   const [minRating, setMinRating] = useState("");
   const [color, setColor] = useState("");
   const [sort, setSort] = useState("relevance");
-  // Removido CRUD: modalOpen, editProduct
-  const { addItem } = useCartStore();
+    // Comentários removidos
+  const { addProduct } = useCart();
+  const user = useAuthStore((s) => s.user);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   function fetchProducts() {
     setLoading(true);
     api.get<{ products: Product[] }>("/products")
       .then((res) => {
         const data = Array.isArray(res.products) ? res.products : [];
+        // Log dos campos de imagem para debug
+        if (data.length > 0) {
+          console.log("Produtos carregados:", data.map(p => ({ id: p.id, image: p.image, imageUrl: p.imageUrl })));
+        } else {
+          console.log("Nenhum produto retornado pela API.");
+        }
         setProducts(data);
       })
       .catch(() => {
@@ -66,12 +74,16 @@ export default function ProductsPage() {
     // api.get("/products/featured")... (removido pois não há endpoint tipado)
   }, []);
 
-  function handleAddToCart(product: Product) {
-    addItem({ ...product, quantity: 1 });
+  async function handleAddToCart(product: Product) {
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+    await addProduct(product.id, 1);
     showSuccess("Produto adicionado ao carrinho!");
   }
 
-  // Removido CRUD: handleEdit, handleDelete, handleCreate
+    // Comentários removidos
 
   // Listas únicas para filtros (apenas string[])
   const categories = useMemo(() => Array.from(new Set(products.map(p => p.category).filter((v): v is string => !!v))), [products]);
@@ -117,7 +129,25 @@ export default function ProductsPage() {
   // (Removido: declaração duplicada de hasSearch)
   return (
     <>
-  <Container className="py-4 md:py-8">
+      <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Faça login ou cadastre-se</DialogTitle>
+            <DialogDescription>
+              Para adicionar produtos ao carrinho, é necessário estar logado.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Link href="/login" className="btn btn-primary w-full" onClick={() => setShowAuthModal(false)}>
+              Fazer login
+            </Link>
+            <Link href="/register" className="btn w-full" onClick={() => setShowAuthModal(false)}>
+              Criar conta
+            </Link>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Container className="py-4 md:py-8">
         {/* Só mostra destaque e título se não estiver pesquisando */}
         {/* Destaque desativado pois não há endpoint, adapte se necessário */}
         {/* {!hasSearch && featured.length > 0 && (
@@ -166,6 +196,7 @@ export default function ProductsPage() {
                         )
                     : product.image
                 }
+                imageUrl={product.imageUrl}
                 description={product.description}
                 onAddToCart={() => handleAddToCart(product)}
                 animationDelay={idx * 80}

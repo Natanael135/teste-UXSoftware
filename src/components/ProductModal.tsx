@@ -34,16 +34,23 @@ export const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, initi
   async function onSubmit(data: Record<string, unknown>) {
     setLoading(true);
     try {
+      const formData = new FormData();
+      formData.append("name", String(data.name));
+      formData.append("price", String(data.price));
+      formData.append("description", String(data.description || ""));
+      if (data.image && data.image instanceof File) {
+        formData.append("image", data.image);
+      }
       if (isEdit) {
-        await api.put(`/products/${initialData.id}`, data);
+        await api.put(`/products/${initialData.id}`, formData, true, true);
         showSuccess("Produto atualizado!");
       } else {
-        await api.post("/products", data);
+        await api.post("/products", formData, true, true);
         showSuccess("Produto criado!");
       }
       onSuccess();
       onClose();
-  } catch (err: unknown) {
+    } catch (err: unknown) {
       if (typeof err === "object" && err && "response" in err && err.response && typeof err.response === "object" && "data" in err.response && err.response.data && typeof err.response.data === "object" && "message" in err.response.data) {
         showError((err.response.data as { message?: string }).message || "Erro ao salvar produto");
       } else {
@@ -72,8 +79,8 @@ export const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, initi
             {errors.price && <span className="text-accent text-sm">{errors.price.message}</span>}
           </div>
           <div>
-            <label className="block mb-1 text-foreground">URL da Imagem</label>
-            <Input {...register("image")} aria-invalid={!!errors.image} />
+            <label className="block mb-1 text-foreground">Imagem</label>
+            <Input type="file" accept="image/*" {...register("image")} aria-invalid={!!errors.image} />
             {errors.image && <span className="text-accent text-sm">{errors.image.message}</span>}
           </div>
           <div>
