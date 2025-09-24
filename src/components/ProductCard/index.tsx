@@ -16,6 +16,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
+  id = "",
   name,
   price,
   image,
@@ -23,16 +24,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   description,
   onAddToCart,
   animationDelay = 0,
-  ...props
-}) => (
-  <Card style={{ animationDelay: `${animationDelay}ms` }} className="group shadow-lg hover:scale-[1.03] hover:shadow-xl transition-transform duration-300 animate-fade-in bg-card border border-border" {...props}>
-    {(imageUrl || image) && (
-      <Link
-        href={`/products/${props.id ?? ""}`}
-        tabIndex={-1}
-        className="flex justify-center items-center mb-2 focus:outline-none"
-        style={{ minHeight: 160 }}
-      >
+}) => {
+  return (
+    <Card style={{ animationDelay: `${animationDelay}ms` }} className="group shadow-lg hover:scale-[1.03] hover:shadow-xl transition-transform duration-300 animate-fade-in bg-card border border-border">
+      {(imageUrl || image) && (
+        <Link
+          href={`/products/${id}`}
+          tabIndex={-1}
+          className="flex justify-center items-center mb-2 focus:outline-none"
+          style={{ minHeight: 160 }}
+        >
         <AppImage
           src={(imageUrl || image) ?? ""}
           alt={name}
@@ -44,7 +45,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       </Link>
     )}
     <CardHeader>
-      <Link href={`/products/${props.id ?? ""}`} className="focus:outline-none">
+      <Link href={`/products/${id}`} className="focus:outline-none">
         <CardTitle className="hover:underline cursor-pointer text-foreground">{name}</CardTitle>
       </Link>
       <CardDescription className="text-accent font-bold">R$ {price.toFixed(2)}</CardDescription>
@@ -59,5 +60,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </Button>
       )}
     </CardFooter>
-  </Card>
-);
+    </Card>
+  );
+};
+

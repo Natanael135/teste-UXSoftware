@@ -1,7 +1,5 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogClose, DialogTitle } from "@/components/ui/dialog";
-import { useState } from "react";
 
 interface ProductFiltersProps {
   minPrice: string;

@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useCart } from "@/contexts/cartApi";
 import { showSuccess } from "@/utils/toast";
 import type { Product } from "@/types/product";
-import { Input } from "@/components/ui/input";
+// ...existing code... (Input import removed, not used)
 
 export default function ProductDetailPage() {
 

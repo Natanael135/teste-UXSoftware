@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from "react";
 import { useProductForm } from "@/hooks/useProductForm";
 import { api } from "@/services/api";

@@ -1,15 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Heart, ShoppingCart, ChevronDown } from "lucide-react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
-
-import type { User } from "@/types/user";
-interface NavbarDesktopMenuProps {
-  user: User;
-  logout: () => void;
-  cartCount: number;
-}
+// Simplified desktop menu — props and extra icons/menus removed for now
 
 export function NavbarDesktopMenu() {
   return (

@@ -1,6 +1,6 @@
 import "keen-slider/keen-slider.min.css";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { useKeenSlider } from "keen-slider/react";
 import { FeaturedProduct, FeaturedProductProps } from "@/components/FeaturedProduct";
 
@@ -10,13 +10,9 @@ interface FeaturedCarouselProps {
 
 
 export const FeaturedCarousel: React.FC<FeaturedCarouselProps> = ({ products }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     loop: true,
     slides: { perView: 1 },
-    slideChanged(slider) {
-      setCurrentSlide(slider.track.details.rel);
-    },
   });
   const timer = useRef<NodeJS.Timeout | null>(null);
   const mouseOver = useRef(false);
