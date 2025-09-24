@@ -170,7 +170,7 @@ export default function ProductsPage() {
     </aside>
     {/* Conteúdo principal centralizado, com padding apenas no Container */}
     <div className="flex-1 h-full flex flex-col">
-      <Container className="relative h-full">
+  <Container className="relative h-full py-4">
             {/* Título e subtítulo centralizados */}
             {!hasSearch && (
               <div className="mb-4 text-center">
