@@ -95,8 +95,12 @@ export default function AdminDashboard() {
       );
       setProducts((prev) => prev.map((p) => p.id === updated.id ? updated : p));
       setEditProduct(null);
-    } catch (e: any) {
-      showError(e.message || "Erro ao salvar produto");
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        showError(e.message || "Erro ao salvar produto");
+      } else {
+        showError("Erro ao salvar produto");
+      }
     } finally {
       setSaving(false);
     }
@@ -160,8 +164,12 @@ export default function AdminDashboard() {
                   try {
                     await api.delete(`/products/${p.id}`, undefined, true);
                     setProducts((prev) => prev.filter(prod => prod.id !== p.id));
-                  } catch (e: any) {
-                    showError(e.message || "Erro ao excluir produto");
+                  } catch (e: unknown) {
+                    if (e instanceof Error) {
+                      showError(e.message || "Erro ao excluir produto");
+                    } else {
+                      showError("Erro ao excluir produto");
+                    }
                   }
                 }}>Excluir</button>
               </td>

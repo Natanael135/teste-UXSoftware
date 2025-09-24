@@ -23,7 +23,7 @@ export default function LoginPage() {
   async function onSubmit(data: Record<string, unknown>) {
     setLoading(true);
     try {
-      const res = await api.post<{ user: import("@/store/auth").User; accessToken: string }>("/auth/login", data);
+  const res = await api.post<{ user: import("@/types/user").User; accessToken: string }>("/auth/login", data);
       login(res.user, res.accessToken);
       showSuccess("Login realizado com sucesso!");
       // Se for admin, redireciona para dashboard admin

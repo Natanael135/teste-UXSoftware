@@ -1,17 +1,13 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
 
-export type User = {
-  name: string
-  email: string
-  avatar: string
-}
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import type { User } from '@/types/user';
 
 interface AuthState {
-  user: User | null
-  token: string | null
-  login: (user: User, token: string) => void
-  logout: () => void
+  user: User | null;
+  token: string | null;
+  login: (user: User, token: string) => void;
+  logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(

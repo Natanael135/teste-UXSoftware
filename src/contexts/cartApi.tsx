@@ -48,7 +48,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       const data = await api.get<Cart>("/cart", true);
       setCart(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message === "Unauthorized") {
+        // Desloga o usuário e limpa o carrinho
+        useAuthStore.getState().logout();
+        setCart(null);
+        if (typeof window !== "undefined") {
+          // Evita múltiplos toasts
+          if (!window.__cartAuthToast) {
+            window.__cartAuthToast = true;
+            import("@/utils/toast").then(({ showError }) => {
+              showError("Sessão expirada. Faça login novamente.");
+              setTimeout(() => { window.__cartAuthToast = false; }, 3000);
+            });
+          }
+        }
+      }
       if (err instanceof Error && err.message === "Unauthorized") {
         // Desloga o usuário e limpa o carrinho
         useAuthStore.getState().logout();

@@ -49,8 +49,8 @@ export default function ProductDetailPage() {
   // Função para adicionar todos ao carrinho e redirecionar
   const handleComprarJunto = async () => {
     if (!product) return;
-    // Se o produto do Compre Junto for igual ao atual, soma a quantidade
-    let ids: Record<string, number> = { [product.id]: 1 };
+  // Se o produto do Compre Junto for igual ao atual, soma a quantidade
+  const ids: Record<string, number> = { [product.id]: 1 };
     for (const prod of compreJunto) {
       if (ids[prod.id]) {
         ids[prod.id] += 1;

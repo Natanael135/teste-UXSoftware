@@ -4,8 +4,9 @@ import { ChevronDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 
+import type { User } from "@/types/user";
 interface NavbarAvatarMenuProps {
-  user: any;
+  user: User | null;
   logout: () => void;
 }
 

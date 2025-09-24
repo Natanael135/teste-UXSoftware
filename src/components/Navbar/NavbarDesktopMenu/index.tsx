@@ -4,8 +4,9 @@ import { Heart, ShoppingCart, ChevronDown } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
+import type { User } from "@/types/user";
 interface NavbarDesktopMenuProps {
-  user: any;
+  user: User;
   logout: () => void;
   cartCount: number;
 }

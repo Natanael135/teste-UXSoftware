@@ -4,8 +4,9 @@ import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { Menu, Heart, ShoppingCart } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
+import type { User } from "@/types/user";
 interface NavbarMobileMenuProps {
-  user: any;
+  user: User | null;
   logout: () => void;
   openSheet: boolean;
   setOpenSheet: (open: boolean) => void;
