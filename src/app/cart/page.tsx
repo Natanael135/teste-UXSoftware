@@ -5,7 +5,7 @@ import { useCart } from "@/contexts/cartApi";
 import { showSuccess } from "@/utils/toast";
 import { Container } from "@/components/Container";
 import React, { useEffect, useState, ChangeEvent } from "react";
-import type { Cart, CartItem } from "@/contexts/cartApi";
+import type { CartItem } from "@/contexts/cartApi";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,7 +15,7 @@ import { Trash2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
 export default function CartPage() {
-  const { cart, loading, removeProduct, decreaseQuantity, fetchCart } = useCart();
+  const { cart, loading, removeProduct, decreaseQuantity } = useCart();
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [frete, setFrete] = useState<string>("");
   const [cep, setCep] = useState("");
