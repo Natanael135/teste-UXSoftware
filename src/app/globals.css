@@ -99,3 +99,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes hammer {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  25% { transform: rotate(-10deg) translateY(-5px); }
+  50% { transform: rotate(10deg) translateY(-10px); }
+  75% { transform: rotate(-5deg) translateY(-5px); }
+}
+
+.animate-hammer {
+  animation: hammer 2s infinite;
+}
