@@ -1,13 +1,12 @@
-import React from "react";
 import { Input } from "@/components/ui/input";
 
-interface ProductSearchBarProps {
+interface ProductSearchBarInputProps {
   search: string;
   setSearch: (v: string) => void;
 }
 
-export const ProductSearchBar: React.FC<ProductSearchBarProps> = ({ search, setSearch }) => (
-  <div className="w-full flex items-center justify-center animate-fade-in delay-100">
+export function ProductSearchBarInput({ search, setSearch }: ProductSearchBarInputProps) {
+  return (
     <Input
       type="text"
       placeholder="Buscar produto por nome, marca, categoria..."
@@ -17,5 +16,5 @@ export const ProductSearchBar: React.FC<ProductSearchBarProps> = ({ search, setS
       aria-label="Buscar produto"
       style={{ boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)' }}
     />
-  </div>
-);
+  );
+}
