@@ -1,9 +1,10 @@
-import { UseFormRegister, FieldErrors, FieldValues } from "react-hook-form";
+import { UseFormRegister, FieldErrors } from "react-hook-form";
 import { Input } from "@/components/ui/input";
+import { ProductFormData } from "@/hooks/useProductSchema";
 
 interface ProductModalFormProps {
-  register: UseFormRegister<FieldValues>;
-  errors: FieldErrors<FieldValues>;
+  register: UseFormRegister<ProductFormData>;
+  errors: FieldErrors<ProductFormData>;
 }
 
 export function ProductModalForm({ register, errors }: ProductModalFormProps) {
