@@ -154,10 +154,10 @@ export default function ProductsPage() {
       </Dialog>
       {/* Layout flex para sidebar e conteúdo principal */}
       {/* Layout flex para sidebar e conteúdo principal */}
-  <div className="flex min-h-full flex-1">
+  <div className="flex min-h-full flex-1 ">
     {/* Sidebar lateral fora do Container, sem padding */}
     <aside className="hidden lg:block w-64 shrink-0 h-full flex flex-col bg-background/95 border-r border-border animate-fade-in">
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 overflow-y-auto p-6 mb-10">
         <ProductFilters
           minPrice={minPrice} setMinPrice={setMinPrice}
           maxPrice={maxPrice} setMaxPrice={setMaxPrice}
