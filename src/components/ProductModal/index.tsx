@@ -66,7 +66,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, initi
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent>
+  <DialogContent className="pt-8">
         <ProductModalHeader isEdit={isEdit} />
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <ProductModalForm register={register} errors={errors} />

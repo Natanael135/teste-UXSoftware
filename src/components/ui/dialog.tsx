@@ -60,7 +60,8 @@ function DialogContent({
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid max-w-[98vw] sm:max-w-lg max-h-[90vh] overflow-auto translate-x-[-50%] translate-y-[-50%] gap-1 rounded border-0 p-2 sm:p-6 shadow-lg duration-200",
+          // Mais largo, mais padding, gap maior, centralização real
+          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-4 left-1/2 z-50 grid max-w-[98vw] sm:max-w-xl md:max-w-2xl max-h-[92vh] overflow-auto -translate-x-1/2 gap-3 rounded border-0 p-4 sm:p-8 shadow-lg duration-200 sm:top-1/2 sm:-translate-y-1/2",
           className
         )}
         {...props}
@@ -84,7 +85,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="dialog-header"
-      className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
+      className={cn("flex flex-col gap-2 text-center sm:text-left sticky top-0 z-10 bg-background pt-2", className)}
       {...props}
     />
   )

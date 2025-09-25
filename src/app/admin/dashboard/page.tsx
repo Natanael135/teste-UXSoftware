@@ -260,13 +260,13 @@ export default function AdminDashboard() {
       </Card>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>{editingProduct ? "Editar Produto" : "Novo Produto"}</DialogTitle>
-            <DialogDescription>
-              {editingProduct ? "Atualize as informações do produto." : "Preencha as informações do novo produto."}
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto mx-auto rounded-xl p-4 shadow-lg border border-border flex flex-col">
+          <DialogTitle className="text-lg font-bold text-center text-foreground mb-4">
+            {editingProduct ? "Editar Produto" : "Novo Produto"}
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            {editingProduct ? "Atualize as informações do produto." : "Preencha as informações do novo produto."}
+          </DialogDescription>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

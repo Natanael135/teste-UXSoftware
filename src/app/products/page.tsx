@@ -130,6 +130,7 @@ export default function ProductsPage() {
     return result;
   }, [products, debouncedSearch, minPrice, maxPrice, category, brand, freeShipping, minRating, color, sort]);
 
+
   // (Removido: declaração duplicada de hasSearch)
   return (
     <>
@@ -195,8 +196,9 @@ export default function ProductsPage() {
                   <Filter size={20} />
                   <span>Filtros</span>
                 </button>
-                <DialogContent className="w-[95vw] max-w-sm max-h-[70vh] overflow-y-auto mx-auto rounded-xl p-6 shadow-lg border border-border flex flex-col items-center justify-center">
-                  <DialogTitle className="text-lg font-bold mb-4 text-foreground">Filtros</DialogTitle>
+                <DialogContent className="w-[95vw] max-w-sm max-h-[90vh] overflow-y-auto mx-auto rounded-xl p-4 shadow-lg border border-border flex flex-col">
+                  <DialogTitle className="text-lg font-bold text-center text-foreground mb-4">Filtros</DialogTitle>
+                  <DialogDescription className="sr-only">Selecione os filtros desejados para refinar sua busca de produtos.</DialogDescription>
                   <div className="flex flex-col gap-6 w-full py-2">
                     <ProductFilters
                       minPrice={minPrice} setMinPrice={setMinPrice}
