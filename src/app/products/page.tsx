@@ -222,7 +222,7 @@ export default function ProductsPage() {
             {/* Conteúdo principal */}
             <main>
               {(loading || isDebouncing) ? (
-                <LoadingSpinner size="md" className="min-h-[200px]" />
+                <LoadingSpinner size="md" fullscreen={false} className="min-h-[200px]" />
               ) : filteredProducts.length === 0 ? (
                 <div className="text-center text-muted-foreground">Nenhum produto encontrado.</div>
               ) : (
