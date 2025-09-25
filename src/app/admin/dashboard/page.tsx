@@ -39,6 +39,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2, Search, Package } from "lucide-react";
 import { useProductForm } from "@/hooks/useProductForm";
+import { ProductFormData } from "@/hooks/useProductSchema";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { AppImage } from "@/components/AppImage";
 
 export default function AdminDashboard() {
@@ -47,6 +49,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
 
   const form = useProductForm();
@@ -59,7 +62,7 @@ export default function AdminDashboard() {
     try {
       const res = await api.get<{ products: Product[] }>("/products");
       setProducts(Array.isArray(res.products) ? res.products : []);
-    } catch (e) {
+    } catch {
       showError("Erro ao carregar produtos");
     } finally {
       setLoading(false);
@@ -68,6 +71,7 @@ export default function AdminDashboard() {
 
   const handleCreate = () => {
     setEditingProduct(null);
+    setImageFile(null);
     form.reset({
       name: "",
       price: 0,
@@ -105,25 +109,36 @@ export default function AdminDashboard() {
       await api.delete(`/products/${productId}`, undefined, true);
       setProducts((prev) => prev.filter((p) => p.id !== productId));
       showSuccess("Produto excluído com sucesso");
-    } catch (e) {
+    } catch {
       showError("Erro ao excluir produto");
     }
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: ProductFormData) => {
     setSaving(true);
     try {
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, value.toString());
+        }
+      });
+      if (imageFile) {
+        formData.append('image', imageFile);
+      }
+
       if (editingProduct) {
-        const updated = await api.put<Product>(`/products/${editingProduct.id}`, data, true);
+        const updated = await api.put<Product>(`/products/${editingProduct.id}`, formData, true, true);
         setProducts((prev) => prev.map((p) => p.id === updated.id ? updated : p));
         showSuccess("Produto atualizado com sucesso");
       } else {
-        const created = await api.post<Product>("/products", data, true);
+        const created = await api.post<Product>("/products", formData, true, true);
         setProducts((prev) => [created, ...prev]);
         showSuccess("Produto criado com sucesso");
       }
       setDialogOpen(false);
-    } catch (e) {
+      setImageFile(null);
+    } catch {
       showError("Erro ao salvar produto");
     } finally {
       setSaving(false);
@@ -137,11 +152,7 @@ export default function AdminDashboard() {
   );
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-      </div>
-    );
+    return <LoadingSpinner size="lg" />;
   }
 
   return (
@@ -296,11 +307,21 @@ export default function AdminDashboard() {
               <FormField
                 control={form.control}
                 name="image"
-                render={({ field }) => (
+                render={({ field: { onChange, ...field } }) => (
                   <FormItem>
-                    <FormLabel>URL da Imagem</FormLabel>
+                    <FormLabel>Imagem</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          setImageFile(file || null);
+                          onChange(file ? URL.createObjectURL(file) : "");
+                        }}
+                        {...field}
+                        value={undefined}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -432,143 +453,6 @@ export default function AdminDashboard() {
               </DialogFooter>
             </form>
           </Form>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-}
-        <Input
-          type="text"
-          placeholder="Buscar por nome ou código..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <Link href="/admin/products/create" className="bg-primary text-white px-4 py-2 rounded font-semibold hover:bg-primary/90">Novo Produto</Link>
-      </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>Nome</TableHead>
-            <TableHead>Preço</TableHead>
-            <TableHead>Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {loading ? (
-            <TableRow>
-              <TableCell colSpan={4} className="text-center text-muted-foreground">Carregando...</TableCell>
-            </TableRow>
-          ) : filtered.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={4} className="text-center text-muted-foreground">Nenhum produto encontrado.</TableCell>
-            </TableRow>
-          ) : filtered.map((p) => (
-            <TableRow key={p.id}>
-              <TableCell>{p.id}</TableCell>
-              <TableCell>{p.name}</TableCell>
-              <TableCell>R$ {p.price}</TableCell>
-              <TableCell className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={() => handleEditClick(p)}>Editar</Button>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="destructive" size="sm">Excluir</Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Tem certeza que deseja excluir o produto &quot;{p.name}&quot;? Esta ação não pode ser desfeita.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                      <AlertDialogAction onClick={async () => {
-                        try {
-                          await api.delete(`/products/${p.id}`, undefined, true);
-                          setProducts((prev) => prev.filter(prod => prod.id !== p.id));
-                        } catch (e: unknown) {
-                          if (e instanceof Error) {
-                            showError(e.message || "Erro ao excluir produto");
-                          } else {
-                            showError("Erro ao excluir produto");
-                          }
-                        }
-                      }}>Excluir</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      {/* Modal de edição */}
-      <Dialog open={!!editProduct} onOpenChange={open => !open && setEditProduct(null)}>
-        <DialogContent className="max-w-lg w-full p-0">
-          <DialogHeader className="p-6 pb-2">
-            <DialogTitle>Editar Produto</DialogTitle>
-            <DialogDescription>Altere os campos desejados e salve para atualizar o produto.</DialogDescription>
-          </DialogHeader>
-          <form onSubmit={e => { e.preventDefault(); handleEditSave(); }} className="flex flex-col gap-3 px-6 pb-2 pt-2 max-h-[70vh] overflow-y-auto">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label className="flex flex-col gap-1">
-                Nome
-                <input name="name" value={editForm.name} onChange={handleEditChange} className="border rounded px-3 py-2" required />
-              </label>
-              <label className="flex flex-col gap-1">
-                Preço
-                <input name="price" type="number" value={editForm.price} onChange={handleEditChange} className="border rounded px-3 py-2" required min={0} step={0.01} />
-              </label>
-              <label className="flex flex-col gap-1">
-                Imagem
-                <input name="imageFile" type="file" accept="image/*" onChange={handleEditChange} className="border rounded px-3 py-2" />
-                {editForm.imagePreview || editForm.image ? (
-                  <Image
-                    src={(editForm.imagePreview || editForm.imageUrl || editForm.image) ?? ""}
-                    alt="Preview"
-                    width={220}
-                    height={128}
-                    className="mt-2 rounded shadow max-h-32 object-contain border"
-                  />
-                ) : null}
-              </label>
-              <label className="flex flex-col gap-1">
-                Categoria
-                <input name="category" value={editForm.category} onChange={handleEditChange} className="border rounded px-3 py-2" />
-              </label>
-              <label className="flex flex-col gap-1">
-                Marca
-                <input name="brand" value={editForm.brand} onChange={handleEditChange} className="border rounded px-3 py-2" />
-              </label>
-              <label className="flex flex-col gap-1">
-                Cor
-                <input name="color" value={editForm.color} onChange={handleEditChange} className="border rounded px-3 py-2" />
-              </label>
-              <label className="flex flex-col gap-1">
-                Estoque
-                <input name="stock" type="number" value={editForm.stock} onChange={handleEditChange} className="border rounded px-3 py-2" min={0} />
-              </label>
-              <label className="flex flex-col gap-1">
-                Avaliação (rating)
-                <input name="rating" type="number" step="0.1" value={editForm.rating} onChange={handleEditChange} className="border rounded px-3 py-2" min={0} max={5} />
-              </label>
-            </div>
-            <label className="flex flex-col gap-1">
-              Descrição
-              <textarea name="description" value={editForm.description} onChange={handleEditChange} className="border rounded px-3 py-2 min-h-[60px]" />
-            </label>
-            <label className="flex flex-row gap-2 items-center">
-              <input name="freeShipping" type="checkbox" checked={!!editForm.freeShipping} onChange={handleEditChange} />
-              Frete grátis
-            </label>
-            <DialogFooter className="pt-2">
-              <DialogClose asChild>
-                <button type="button" className="px-4 py-2 rounded border">Cancelar</button>
-              </DialogClose>
-              <button type="submit" className="bg-primary text-white px-4 py-2 rounded font-semibold hover:bg-primary/90" disabled={saving}>{saving ? "Salvando..." : "Salvar"}</button>
-            </DialogFooter>
-          </form>
         </DialogContent>
       </Dialog>
     </div>

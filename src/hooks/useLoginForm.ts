@@ -5,5 +5,9 @@ import { loginSchema, LoginFormData } from "./useLoginSchema";
 export function useLoginForm() {
   return useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 }

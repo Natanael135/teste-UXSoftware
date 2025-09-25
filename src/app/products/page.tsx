@@ -8,6 +8,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { Container } from "@/components/Container";
 import { showError, showSuccess } from "@/utils/toast";
 import { ProductCard } from "@/components/ProductCard";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { ProductFilters } from "@/components/ProductFilters";
 // import { useState } from "react"; // Removido duplicado
 import { Filter } from "lucide-react";
@@ -221,7 +222,7 @@ export default function ProductsPage() {
             {/* Conteúdo principal */}
             <main>
               {(loading || isDebouncing) ? (
-                <div className="text-center text-muted-foreground">Carregando...</div>
+                <LoadingSpinner size="md" className="min-h-[200px]" />
               ) : filteredProducts.length === 0 ? (
                 <div className="text-center text-muted-foreground">Nenhum produto encontrado.</div>
               ) : (

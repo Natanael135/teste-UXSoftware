@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { Badge } from "@/components/ui/badge";
 import { Trash2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
@@ -43,7 +44,7 @@ export default function CartPage() {
     <Container className="max-w-6xl py-10">
       <h1 className="text-3xl font-extrabold mb-8 text-primary">Meu Carrinho</h1>
       {loading ? (
-        <div className="text-center text-muted-foreground">Carregando...</div>
+        <LoadingSpinner size="md" className="min-h-[200px]" />
       ) : !cart || cart.items.length === 0 ? (
         <div className="text-center text-muted-foreground">Seu carrinho está vazio.</div>
       ) : (

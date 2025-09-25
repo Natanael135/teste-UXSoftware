@@ -5,5 +5,11 @@ import { registerSchema, RegisterFormData } from "./useRegisterSchema";
 export function useRegisterForm() {
   return useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
 }
