@@ -110,3 +110,7 @@
 .animate-hammer {
   animation: hammer 2s infinite;
 }
+
+.blocked-cursor {
+  @apply cursor-not-allowed;
+}

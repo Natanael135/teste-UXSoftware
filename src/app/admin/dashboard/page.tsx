@@ -275,7 +275,7 @@ export default function AdminDashboard() {
                   control={form.control}
                   name="name"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="blocked-cursor">
                       <FormLabel>Nome</FormLabel>
                       <FormControl>
                         <Input {...field} />
@@ -332,7 +332,7 @@ export default function AdminDashboard() {
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="blocked-cursor">
                     <FormLabel>Descrição</FormLabel>
                     <FormControl>
                       <Textarea {...field} />
@@ -347,10 +347,15 @@ export default function AdminDashboard() {
                   control={form.control}
                   name="category"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="blocked-cursor">
                       <FormLabel>Categoria</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          {...field}
+                          disabled
+                          title="Campo desabilitado"
+                          className="blocked-cursor opacity-60"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -360,10 +365,15 @@ export default function AdminDashboard() {
                   control={form.control}
                   name="brand"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="blocked-cursor">
                       <FormLabel>Marca</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          {...field}
+                          disabled
+                          title="Campo desabilitado"
+                          className="blocked-cursor opacity-60"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -376,7 +386,7 @@ export default function AdminDashboard() {
                   control={form.control}
                   name="rating"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="blocked-cursor">
                       <FormLabel>Avaliação</FormLabel>
                       <FormControl>
                         <Input
@@ -385,7 +395,9 @@ export default function AdminDashboard() {
                           max="5"
                           step="0.1"
                           {...field}
-                          onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
+                          disabled
+                          title="Campo desabilitado"
+                          className="blocked-cursor opacity-60"
                         />
                       </FormControl>
                       <FormMessage />
@@ -396,14 +408,16 @@ export default function AdminDashboard() {
                   control={form.control}
                   name="stock"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="blocked-cursor">
                       <FormLabel>Estoque</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
                           min="0"
                           {...field}
-                          onChange={(e) => field.onChange(parseInt(e.target.value) || undefined)}
+                          disabled
+                          title="Campo desabilitado"
+                          className="blocked-cursor opacity-60"
                         />
                       </FormControl>
                       <FormMessage />
@@ -414,10 +428,15 @@ export default function AdminDashboard() {
                   control={form.control}
                   name="color"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="blocked-cursor">
                       <FormLabel>Cor</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          {...field}
+                          disabled
+                          title="Campo desabilitado"
+                          className="blocked-cursor opacity-60"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -429,11 +448,14 @@ export default function AdminDashboard() {
                 control={form.control}
                 name="freeShipping"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 blocked-cursor">
                     <FormControl>
                       <Checkbox
                         checked={field.value}
                         onCheckedChange={field.onChange}
+                        disabled
+                        title="Campo desabilitado"
+                        className="blocked-cursor opacity-60"
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
