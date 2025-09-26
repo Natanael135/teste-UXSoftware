@@ -1,4 +1,4 @@
-import { Input } from "@/components/ui/input";
+import { FormInput } from "@/components/ui/form-input";
 
 interface ProductFiltersPriceMinProps {
   minPrice: string;
@@ -7,15 +7,13 @@ interface ProductFiltersPriceMinProps {
 
 export function ProductFiltersPriceMin({ minPrice, setMinPrice }: ProductFiltersPriceMinProps) {
   return (
-    <div className="flex flex-col gap-2 w-full">
-      <label className="text-xs font-semibold text-foreground">Preço mín.</label>
-      <Input
-        type="number"
-        min={0}
-        placeholder="0"
-        value={minPrice}
-        onChange={e => setMinPrice(e.target.value)}
-      />
-    </div>
+    <FormInput
+      label="Preço mín."
+      type="number"
+      min={0}
+      placeholder="0"
+      value={minPrice}
+      onChange={setMinPrice}
+    />
   );
 }
