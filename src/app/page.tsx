@@ -4,7 +4,6 @@ import { useProducts } from "@/hooks/useProducts";
 import { useSearchStore } from "@/store/search";
 import { useDebounce } from "@/hooks/useDebounce";
 import { Container } from "@/components/Container";
-import { showSuccess } from "@/utils/toast";
 import { ProductCard } from "@/components/ProductCard";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { ProductFilters } from "@/components/ProductFilters";
@@ -16,20 +15,6 @@ import { AuthModal } from "@/components/ui/auth-modal";
 import React, { useState, useEffect } from "react";
 import { useCart } from "@/contexts/cartApi";
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image?: string;
-  imageUrl?: string;
-  description?: string;
-  category?: string;
-  brand?: string;
-  rating?: number;
-  freeShipping?: boolean;
-  color?: string;
-  stock?: number;
-}
 
 export default function ProductsPage() {
   const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -38,8 +23,7 @@ export default function ProductsPage() {
   const isDebouncing = search !== debouncedSearch;
   const hasSearch = search.trim().length > 0;
 
-  const { addProduct } = useCart();
-  const { user, token } = useAuthStore();
+  // ...existing code...
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   const {
@@ -59,14 +43,6 @@ export default function ProductsPage() {
     setFilters.setSearch(debouncedSearch);
   }, [debouncedSearch, setFilters]);
 
-  async function handleAddToCart(product: Product) {
-    if (!user || !token) {
-      setShowAuthModal(true);
-      return;
-    }
-    await addProduct(product.id, 1);
-    showSuccess("Produto adicionado ao carrinho!");
-  }
 
 
   // (Removido: declaração duplicada de hasSearch)
@@ -168,7 +144,6 @@ export default function ProductsPage() {
                       }
                       imageUrl={product.imageUrl}
                       description={product.description}
-                      onAddToCart={() => handleAddToCart(product)}
                       animationDelay={idx * 80}
                     />
                   ))}
