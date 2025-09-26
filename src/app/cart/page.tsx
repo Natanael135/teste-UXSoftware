@@ -11,7 +11,7 @@ import Link from "next/link";
 
 export default function CartPage() {
   const { cart, loading, removeProduct, decreaseQuantity, addProduct } = useCart();
-  const { user } = useAuthStore();
+  const { user, token } = useAuthStore();
   const router = useRouter();
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [frete, setFrete] = useState<string>("");
@@ -19,14 +19,16 @@ export default function CartPage() {
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
-    if (!user) {
+    // Só redirecionar se não estiver autenticado
+    if (!user || !token) {
       setShowAuthModal(true);
       // Redirecionar após um delay para dar tempo de ver o modal
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         router.push('/');
       }, 3000);
+      return () => clearTimeout(timeoutId);
     }
-  }, [user, router]);
+  }, [user, token, router]);
 
   useEffect(() => {
     if (cart) {
@@ -83,7 +85,7 @@ export default function CartPage() {
     // Implementar checkout
   };
 
-  if (!user) {
+  if (!user || !token) {
     return (
       <>
         <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>

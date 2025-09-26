@@ -20,7 +20,7 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const { addProduct } = useCart();
-  const { user } = useAuthStore();
+  const { user, token } = useAuthStore();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [quantity] = useState(1);
   const images = React.useMemo(() => [product?.imageUrl || product?.image || "https://placehold.co/320x320?text=Sem+Imagem"], [product]);
@@ -70,7 +70,7 @@ export default function ProductDetailPage() {
   };
 
   const handleAddToCart = async (redirectToCart = false) => {
-    if (!user) {
+    if (!user || !token) {
       setShowAuthModal(true);
       return;
     }

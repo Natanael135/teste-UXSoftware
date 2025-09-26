@@ -50,7 +50,7 @@ export default function ProductsPage() {
   const [sort, setSort] = useState("relevance");
     // Comentários removidos
   const { addProduct } = useCart();
-  const user = useAuthStore((s) => s.user);
+  const { user, token } = useAuthStore();
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   function fetchProducts() {
@@ -79,7 +79,7 @@ export default function ProductsPage() {
   }, []);
 
   async function handleAddToCart(product: Product) {
-    if (!user) {
+    if (!user || !token) {
       setShowAuthModal(true);
       return;
     }
