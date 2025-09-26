@@ -11,8 +11,7 @@ import { showSuccess } from "@/utils/toast";
 import type { Product } from "@/types/product";
 import { ShoppingCart } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import Link from "next/link";
+import { AuthModal } from "@/components/ui/auth-modal";
 
 export default function ProductDetailPage() {
 
@@ -161,35 +160,7 @@ export default function ProductDetailPage() {
       </div>
 
       {/* Modal de Autenticação */}
-      <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogTitle className="sr-only">Faça login para continuar</DialogTitle>
-          <DialogDescription className="sr-only">
-            Você precisa estar logado para adicionar produtos ao carrinho.
-          </DialogDescription>
-          <div className="flex flex-col items-center text-center p-6">
-            <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mb-4">
-              <ShoppingCart className="w-8 h-8 text-accent" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Faça login para continuar</h3>
-            <p className="text-muted-foreground mb-6">
-              Você precisa estar logado para adicionar produtos ao carrinho.
-            </p>
-            <div className="flex flex-col gap-3 w-full">
-              <Link href="/login" className="w-full">
-                <Button className="w-full bg-accent hover:bg-primary text-white">
-                  Fazer Login
-                </Button>
-              </Link>
-              <Link href="/register" className="w-full">
-                <Button variant="outline" className="w-full">
-                  Criar Conta
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <AuthModal open={showAuthModal} onOpenChange={setShowAuthModal} />
     </Container>
   );
 }
