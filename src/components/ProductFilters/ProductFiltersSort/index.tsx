@@ -21,9 +21,10 @@ export function ProductFiltersSort({ sort, setSort }: ProductFiltersSortProps) {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="relevance">Relevância</SelectItem>
-          <SelectItem value="price-asc">Menor preço</SelectItem>
-          <SelectItem value="price-desc">Maior preço</SelectItem>
+          <SelectItem value="price-low">Menor preço</SelectItem>
+          <SelectItem value="price-high">Maior preço</SelectItem>
           <SelectItem value="rating">Melhor avaliação</SelectItem>
+          <SelectItem value="name">Nome (A-Z)</SelectItem>
         </SelectContent>
       </Select>
     </div>
