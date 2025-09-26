@@ -149,7 +149,7 @@ export default function ProductsPage() {
               ) : filteredProducts.length === 0 ? (
                 <div className="text-center text-muted-foreground">Nenhum produto encontrado.</div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
                   {filteredProducts.map((product, idx) => (
                     <ProductCard
                       key={product.id}
