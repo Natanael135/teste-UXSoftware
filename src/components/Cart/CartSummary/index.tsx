@@ -35,7 +35,7 @@ export function CartSummary({ subtotal, descontos, total, onCheckout }: CartSumm
             <span className="text-accent">R$ {total.toFixed(2)}</span>
           </div>
         </div>
-        <Button className="w-full h-12 text-lg font-bold bg-accent hover:bg-primary text-white rounded-lg mt-2">
+        <Button className="w-full h-12 text-lg font-bold bg-accent hover:bg-primary text-white rounded-lg mt-2" onClick={onCheckout}>
           <ShoppingCart className="h-5 w-5 mr-2" />
           FINALIZAR COMPRA
         </Button>

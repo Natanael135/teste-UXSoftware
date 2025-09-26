@@ -10,7 +10,9 @@ import { useCart } from "@/contexts/cartApi";
 import { showSuccess } from "@/utils/toast";
 import type { Product } from "@/types/product";
 import { ShoppingCart } from "lucide-react";
-// ...existing code... (Input import removed, not used)
+import { useAuthStore } from "@/store/auth";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import Link from "next/link";
 
 export default function ProductDetailPage() {
 
@@ -18,6 +20,8 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const { addProduct } = useCart();
+  const { user } = useAuthStore();
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [quantity] = useState(1);
   const images = React.useMemo(() => [product?.imageUrl || product?.image || "https://placehold.co/320x320?text=Sem+Imagem"], [product]);
   const [mainImage, setMainImage] = useState<string>("");
@@ -65,6 +69,19 @@ export default function ProductDetailPage() {
     window.location.href = "/cart";
   };
 
+  const handleAddToCart = async (redirectToCart = false) => {
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+    if (!product) return;
+    await addProduct(product.id, quantity);
+    showSuccess("Produto adicionado ao carrinho!");
+    if (redirectToCart) {
+      window.location.href = "/cart";
+    }
+  };
+
   if (loading) return <Container className="py-12 text-center text-muted-foreground">Carregando...</Container>;
   if (!product) return <Container className="py-12 text-center text-muted-foreground">Produto não encontrado.</Container>;
 
@@ -99,17 +116,11 @@ export default function ProductDetailPage() {
                   <span className="text-xs underline text-accent cursor-pointer">mais formas de pagamento</span>
                 </div>
                 <div className="flex flex-col gap-2 mt-2">
-                  <Button className="w-full h-12 text-lg font-bold bg-accent hover:bg-primary text-white rounded-lg" onClick={async () => {
-                    await addProduct(product.id, quantity);
-                    window.location.href = "/cart";
-                  }}>
+                  <Button className="w-full h-12 text-lg font-bold bg-accent hover:bg-primary text-white rounded-lg" onClick={() => handleAddToCart(true)}>
                     <ShoppingCart className="h-5 w-5 mr-2" />
                     COMPRAR
                   </Button>
-                  <Button variant="outline" className="w-full h-10 text-base font-semibold mt-1" onClick={async () => {
-                    await addProduct(product.id, quantity);
-                    showSuccess("Produto adicionado ao carrinho!");
-                  }}>
+                  <Button variant="outline" className="w-full h-10 text-base font-semibold mt-1" onClick={() => handleAddToCart()}>
                     <span className="mr-2">➕</span> Adicionar ao carrinho
                   </Button>
                 </div>
@@ -148,6 +159,37 @@ export default function ProductDetailPage() {
           </Card>
         </div>
       </div>
+
+      {/* Modal de Autenticação */}
+      <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogTitle className="sr-only">Faça login para continuar</DialogTitle>
+          <DialogDescription className="sr-only">
+            Você precisa estar logado para adicionar produtos ao carrinho.
+          </DialogDescription>
+          <div className="flex flex-col items-center text-center p-6">
+            <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mb-4">
+              <ShoppingCart className="w-8 h-8 text-accent" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">Faça login para continuar</h3>
+            <p className="text-muted-foreground mb-6">
+              Você precisa estar logado para adicionar produtos ao carrinho.
+            </p>
+            <div className="flex flex-col gap-3 w-full">
+              <Link href="/login" className="w-full">
+                <Button className="w-full bg-accent hover:bg-primary text-white">
+                  Fazer Login
+                </Button>
+              </Link>
+              <Link href="/register" className="w-full">
+                <Button variant="outline" className="w-full">
+                  Criar Conta
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Container>
   );
 }

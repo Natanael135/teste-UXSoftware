@@ -9,27 +9,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogFooter,
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, Search, Package } from "lucide-react";
+import { Plus, Search, Package } from "lucide-react";
 import { useProductForm } from "@/hooks/useProductForm";
 import { ProductFormData } from "@/hooks/useProductSchema";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
@@ -235,19 +222,19 @@ export default function AdminDashboard() {
               <FormField
                 control={form.control}
                 name="image"
-                render={({ field: { onChange, ...field } }) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Imagem</FormLabel>
                     <FormControl>
-                      <FormInput
+                      <input
                         type="file"
                         accept="image/*"
-                        onChange={(value) => {
-                          // Para file inputs, o valor vem do evento, mas FormInput espera string
-                          // Vamos manter o comportamento original por enquanto
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          setImageFile(file || null);
+                          field.onChange(file ? URL.createObjectURL(file) : "");
                         }}
-                        {...field}
-                        value={undefined}
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       />
                     </FormControl>
                     <FormMessage />
