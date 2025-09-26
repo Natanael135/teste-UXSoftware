@@ -1,5 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/auth";
 import { api } from "@/services/api";
 import { showSuccess } from "@/utils/toast";
 import type { Product } from "@/types/product";
@@ -24,6 +26,9 @@ import { ProductList } from "@/components/Product";
 import { handleApiErrorWithToast } from "@/utils/api-error";
 
 export default function AdminDashboard() {
+  const router = useRouter();
+  const user = useAuthStore((s) => s.user);
+  const isHydrated = useAuthStore((s) => s.isHydrated);
   const [search, setSearch] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,8 +40,16 @@ export default function AdminDashboard() {
   const form = useProductForm();
 
   useEffect(() => {
+    // Aguardar hidratação do estado antes de verificar
+    if (!isHydrated) return;
+
+    // Verificação de segurança no frontend (apenas para UX, segurança real é no backend)
+    if (!user || user.role !== "ADMIN") {
+      router.push("/");
+      return;
+    }
     loadProducts();
-  }, []);
+  }, [user, router, isHydrated]);
 
   const loadProducts = async () => {
     try {

@@ -6,8 +6,10 @@ import type { User } from '@/types/user';
 interface AuthState {
   user: User | null;
   token: string | null;
+  isHydrated: boolean;
   login: (user: User, token: string) => void;
   logout: () => void;
+  setHydrated: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -15,6 +17,7 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       token: null,
+      isHydrated: false,
       login: (user, token) => {
         if (typeof window !== "undefined") {
           localStorage.setItem("accessToken", token);
@@ -26,11 +29,17 @@ export const useAuthStore = create<AuthState>()(
           localStorage.removeItem("accessToken");
         }
         set({ user: null, token: null });
-      }
+      },
+      setHydrated: () => set({ isHydrated: true })
     }),
     {
       name: 'auth',
-      partialize: (state) => ({ user: state.user, token: state.token })
+      partialize: (state) => ({ user: state.user, token: state.token }),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.setHydrated();
+        }
+      }
     }
   )
 )

@@ -5,7 +5,8 @@ import { api } from "@/services/api";
 import { showError, showSuccess } from "@/utils/toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAuthStore } from "@/store/auth";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -23,6 +24,15 @@ export default function RegisterPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const form = useRegisterForm();
+  const user = useAuthStore((s) => s.user);
+  const isHydrated = useAuthStore((s) => s.isHydrated);
+
+  // Redirecionar usuários logados
+  useEffect(() => {
+    if (isHydrated && user) {
+      router.push("/account");
+    }
+  }, [user, isHydrated, router]);
 
   async function onSubmit(data: RegisterFormData) {
     setLoading(true);

@@ -4,7 +4,7 @@ import { api } from "@/services/api";
 import { showError, showSuccess } from "@/utils/toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuthStore } from "@/store/auth";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,6 +22,15 @@ export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const form = useLoginForm();
+  const user = useAuthStore((s) => s.user);
+  const isHydrated = useAuthStore((s) => s.isHydrated);
+
+  // Redirecionar usuários logados
+  useEffect(() => {
+    if (isHydrated && user) {
+      router.push("/account");
+    }
+  }, [user, isHydrated, router]);
 
   const login = useAuthStore((s) => s.login);
   async function onSubmit(data: Record<string, unknown>) {
@@ -31,7 +40,7 @@ export default function LoginPage() {
       login(res.user, res.accessToken);
       showSuccess("Login realizado com sucesso!");
       // Se for admin, redireciona para dashboard admin
-      if (res.user && res.user.email === "admin@admin.com") {
+      if (res.user && res.user.role === "ADMIN") {
         router.push("/admin/dashboard");
       } else {
         router.push("/");
