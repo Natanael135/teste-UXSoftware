@@ -10,7 +10,7 @@ export function NavbarSubheader() {
           <Menu className="w-5 h-5" />
           Departamentos
         </button>
-        <Link href="/products" className="text-base font-medium text-foreground px-3 py-1 rounded hover:bg-accent/10 hover:text-accent transition">Produtos</Link>
+  <Link href="/" className="text-base font-medium text-foreground px-3 py-1 rounded hover:bg-accent/10 hover:text-accent transition">Produtos</Link>
         <Link href="/ofertas" className="text-base font-medium text-foreground px-3 py-1 rounded hover:bg-accent/10 hover:text-accent transition">Ofertas</Link>
         <Link href="/novidades" className="text-base font-medium text-foreground px-3 py-1 rounded hover:bg-accent/10 hover:text-accent transition">Novidades</Link>
       </div>

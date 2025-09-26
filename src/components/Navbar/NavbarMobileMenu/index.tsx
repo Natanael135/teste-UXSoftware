@@ -25,7 +25,7 @@ export function NavbarMobileMenu({ user, logout, openSheet, setOpenSheet, handle
         </SheetTrigger>
         <SheetContent side="left" className="p-6 w-64 bg-white">
           <nav className="flex flex-col gap-2 mt-8">
-            <Link href="/products" className="text-lg font-medium py-2 px-2 rounded text-black hover:bg-accent/10 hover:text-accent transition" onClick={handleCloseSheet}>Produtos</Link>
+            <Link href="/" className="text-lg font-medium py-2 px-2 rounded text-black hover:bg-accent/10 hover:text-accent transition" onClick={handleCloseSheet}>Produtos</Link>
             <Link href="/ofertas" className="text-lg font-medium py-2 px-2 rounded text-black hover:bg-accent/10 hover:text-accent transition" onClick={handleCloseSheet}>Ofertas</Link>
             <Link href="/novidades" className="text-lg font-medium py-2 px-2 rounded text-black hover:bg-accent/10 hover:text-accent transition" onClick={handleCloseSheet}>Novidades</Link>
             {!user && (
