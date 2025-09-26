@@ -1,10 +1,12 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { api } from '@/services/api';
 import { showError } from '@/utils/toast';
 import type { Product } from '@/types/product';
 
 interface UseProductsOptions {
   initialLoad?: boolean;
+  page?: number;
+  limit?: number;
 }
 
 interface UseProductsReturn {
@@ -16,6 +18,15 @@ interface UseProductsReturn {
   categories: string[];
   brands: string[];
   colors: string[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+  setPage: (page: number) => void;
   filters: {
     search: string;
     minPrice: string;
@@ -41,11 +52,14 @@ interface UseProductsReturn {
 }
 
 export function useProducts(options: UseProductsOptions = {}): UseProductsReturn {
-  const { initialLoad = true } = options;
+  const { initialLoad = true, page: initialPage = 1, limit: initialLimit = 12 } = options;
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(initialLoad);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [pageLimit] = useState(initialLimit);
+  const [totalItems, setTotalItems] = useState(0);
 
   // Filtros
   const [search, setSearch] = useState('');
@@ -57,28 +71,57 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
   const [minRating, setMinRating] = useState('');
   const [color, setColor] = useState('');
   const [sort, setSort] = useState('relevance');
+  const setPage = (page: number) => {
+    setCurrentPage(page);
+    fetchProducts(page);
+  };
 
-  const fetchProducts = async () => {
+  const totalPages = Math.ceil(totalItems / pageLimit);
+
+  const pagination = {
+    page: currentPage,
+    limit: pageLimit,
+    total: totalItems,
+    totalPages,
+    hasNextPage: currentPage < totalPages,
+    hasPrevPage: currentPage > 1,
+  };
+
+  const fetchProducts = useCallback(async (page = currentPage) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await api.get<{ products: Product[] }>('/products');
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: pageLimit.toString(),
+      });
+
+      const res = await api.get<{
+        products: Product[];
+        page: number;
+        limit: number;
+        total: number;
+      }>(`/products?${params}`);
+
       const data = Array.isArray(res.products) ? res.products : [];
       setProducts(data);
+      setTotalItems(res.total);
+      setCurrentPage(res.page);
     } catch {
       setError('Erro ao carregar produtos');
       setProducts([]);
+      setTotalItems(0);
       showError('Erro ao carregar produtos');
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, pageLimit]);
 
   useEffect(() => {
     if (initialLoad) {
       fetchProducts();
     }
-  }, [initialLoad]);
+  }, [initialLoad, fetchProducts]);
 
   // Listas únicas para filtros
   const categories = useMemo(() =>
@@ -163,6 +206,8 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
     categories,
     brands,
     colors,
+    pagination,
+    setPage,
     filters: {
       search,
       minPrice,

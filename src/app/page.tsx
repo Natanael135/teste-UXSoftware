@@ -8,6 +8,7 @@ import { showSuccess } from "@/utils/toast";
 import { ProductCard } from "@/components/ProductCard";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { ProductFilters } from "@/components/ProductFilters";
+import { Pagination } from "@/components/Pagination";
 import { Filter } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useAuthStore } from "@/store/auth";
@@ -48,7 +49,9 @@ export default function ProductsPage() {
     brands,
     colors,
     filters,
-    setFilters
+    setFilters,
+    pagination,
+    setPage
   } = useProducts();
 
   // Sincronizar o search do store com o hook useProducts
@@ -171,6 +174,13 @@ export default function ProductsPage() {
                   ))}
                 </div>
               )}
+              <Pagination
+                currentPage={pagination.page}
+                totalPages={pagination.totalPages}
+                onPageChange={setPage}
+                hasNextPage={pagination.hasNextPage}
+                hasPrevPage={pagination.hasPrevPage}
+              />
             </main>
           </Container>
         </div>
