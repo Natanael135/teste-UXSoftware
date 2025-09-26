@@ -12,7 +12,7 @@ import { Filter } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useAuthStore } from "@/store/auth";
 import { AuthModal } from "@/components/ui/auth-modal";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useCart } from "@/contexts/cartApi";
 
 interface Product {
@@ -50,6 +50,11 @@ export default function ProductsPage() {
     filters,
     setFilters
   } = useProducts();
+
+  // Sincronizar o search do store com o hook useProducts
+  useEffect(() => {
+    setFilters.setSearch(debouncedSearch);
+  }, [debouncedSearch, setFilters]);
 
   async function handleAddToCart(product: Product) {
     if (!user || !token) {
