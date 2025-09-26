@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { api } from "@/services/api";
 import { useAuthStore } from "@/store/auth";
+import { handleApiErrorWithToast } from "@/utils/api-error";
 
 export interface CartItem {
   product: {
@@ -75,6 +76,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       await api.post("/cart/add-product", { productId, quantity }, true);
       await fetchCart();
+    } catch (error) {
+      handleApiErrorWithToast(error, "Erro ao adicionar produto ao carrinho");
     } finally {
       setLoading(false);
     }
@@ -86,6 +89,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       await api.delete("/cart/remove-product", { productId }, true);
       await fetchCart();
+    } catch (error) {
+      handleApiErrorWithToast(error, "Erro ao remover produto do carrinho");
     } finally {
       setLoading(false);
     }
@@ -97,6 +102,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       await api.patch("/cart/decrease-quantity", { productId, quantity }, true);
       await fetchCart();
+    } catch (error) {
+      handleApiErrorWithToast(error, "Erro ao atualizar quantidade do produto");
     } finally {
       setLoading(false);
     }

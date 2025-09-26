@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuthStore } from "@/store/auth";
-import { Container } from "@/components/Container";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { AuthLayout } from "@/components/AuthLayout";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -48,8 +48,7 @@ export default function LoginPage() {
   }
 
   return (
-    <Container className="max-w-md py-12">
-      <h1 className="text-2xl font-bold mb-6 text-center text-primary">Entrar</h1>
+    <AuthLayout title="Entrar">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -96,6 +95,6 @@ export default function LoginPage() {
           Não tem conta? Cadastre-se
         </Link>
       </div>
-    </Container>
+    </AuthLayout>
   );
 }

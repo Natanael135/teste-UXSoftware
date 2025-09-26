@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { api } from "@/services/api";
-import { showError, showSuccess } from "@/utils/toast";
+import { showSuccess } from "@/utils/toast";
 import type { Product } from "@/types/product";
 import { FormInput } from "@/components/ui/form-input";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import { useProductForm } from "@/hooks/useProductForm";
 import { ProductFormData } from "@/hooks/useProductSchema";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { ProductList } from "@/components/Product";
+import { handleApiErrorWithToast } from "@/utils/api-error";
 
 export default function AdminDashboard() {
   const [search, setSearch] = useState("");
@@ -41,8 +42,8 @@ export default function AdminDashboard() {
     try {
       const res = await api.get<{ products: Product[] }>("/products");
       setProducts(Array.isArray(res.products) ? res.products : []);
-    } catch {
-      showError("Erro ao carregar produtos");
+    } catch (error) {
+      handleApiErrorWithToast(error, "Erro ao carregar produtos");
     } finally {
       setLoading(false);
     }
@@ -88,8 +89,8 @@ export default function AdminDashboard() {
       await api.delete(`/products/${productId}`, undefined, true);
       setProducts((prev) => prev.filter((p) => p.id !== productId));
       showSuccess("Produto excluído com sucesso");
-    } catch {
-      showError("Erro ao excluir produto");
+    } catch (error) {
+      handleApiErrorWithToast(error, "Erro ao excluir produto");
     }
   };
 
@@ -117,8 +118,8 @@ export default function AdminDashboard() {
       }
       setDialogOpen(false);
       setImageFile(null);
-    } catch {
-      showError("Erro ao salvar produto");
+    } catch (error) {
+      handleApiErrorWithToast(error, "Erro ao salvar produto");
     } finally {
       setSaving(false);
     }

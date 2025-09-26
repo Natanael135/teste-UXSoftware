@@ -12,6 +12,7 @@ import type { Product } from "@/types/product";
 import { ShoppingCart } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { AuthModal } from "@/components/ui/auth-modal";
+import { handleApiErrorWithToast } from "@/utils/api-error";
 
 export default function ProductDetailPage() {
 
@@ -33,18 +34,26 @@ export default function ProductDetailPage() {
       .then((res) => {
         setProduct(res || null);
         setLoading(false);
+      })
+      .catch((error) => {
+        handleApiErrorWithToast(error, "Erro ao carregar produto");
+        setLoading(false);
       });
   }, [id]);
 
   // Produtos reais para Compre Junto
   const [compreJunto, setCompreJunto] = useState<Product[]>([]);
   useEffect(() => {
-    api.get<{ products: Product[] }>("/products").then(res => {
-      if (res && Array.isArray(res.products)) {
-        // Pega até 3 produtos diferentes do atual
-        setCompreJunto(res.products.filter(p => p.id !== id).slice(0, 2));
-      }
-    });
+    api.get<{ products: Product[] }>("/products")
+      .then(res => {
+        if (res && Array.isArray(res.products)) {
+          // Pega até 3 produtos diferentes do atual
+          setCompreJunto(res.products.filter(p => p.id !== id).slice(0, 2));
+        }
+      })
+      .catch((error) => {
+        handleApiErrorWithToast(error, "Erro ao carregar produtos relacionados");
+      });
   }, [id]);
 
   // Garante que o produto atual sempre seja o primeiro do Compre Junto
@@ -53,19 +62,24 @@ export default function ProductDetailPage() {
   // Função para adicionar todos ao carrinho e redirecionar
   const handleComprarJunto = async () => {
     if (!product) return;
-  // Se o produto do Compre Junto for igual ao atual, soma a quantidade
-  const ids: Record<string, number> = { [product.id]: 1 };
-    for (const prod of compreJunto) {
-      if (ids[prod.id]) {
-        ids[prod.id] += 1;
-      } else {
-        ids[prod.id] = 1;
+    try {
+      // Se o produto do Compre Junto for igual ao atual, soma a quantidade
+      const ids: Record<string, number> = { [product.id]: 1 };
+      for (const prod of compreJunto) {
+        if (ids[prod.id]) {
+          ids[prod.id] += 1;
+        } else {
+          ids[prod.id] = 1;
+        }
       }
+      for (const pid in ids) {
+        await addProduct(pid, ids[pid]);
+      }
+      showSuccess("Produtos adicionados ao carrinho!");
+      window.location.href = "/cart";
+    } catch (error) {
+      handleApiErrorWithToast(error, "Erro ao adicionar produtos ao carrinho");
     }
-    for (const pid in ids) {
-      await addProduct(pid, ids[pid]);
-    }
-    window.location.href = "/cart";
   };
 
   const handleAddToCart = async (redirectToCart = false) => {
@@ -74,10 +88,14 @@ export default function ProductDetailPage() {
       return;
     }
     if (!product) return;
-    await addProduct(product.id, quantity);
-    showSuccess("Produto adicionado ao carrinho!");
-    if (redirectToCart) {
-      window.location.href = "/cart";
+    try {
+      await addProduct(product.id, quantity);
+      showSuccess("Produto adicionado ao carrinho!");
+      if (redirectToCart) {
+        window.location.href = "/cart";
+      }
+    } catch (error) {
+      handleApiErrorWithToast(error, "Erro ao adicionar produto ao carrinho");
     }
   };
 

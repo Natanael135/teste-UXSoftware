@@ -6,7 +6,6 @@ import { showError, showSuccess } from "@/utils/toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { Container } from "@/components/Container";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { mask } from "remask";
+import { AuthLayout } from "@/components/AuthLayout";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -43,8 +43,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <Container className="max-w-md py-12">
-      <h1 className="text-2xl font-bold mb-6 text-center text-primary">Cadastro</h1>
+    <AuthLayout title="Cadastro">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -163,6 +162,6 @@ export default function RegisterPage() {
           Já tem conta? Entrar
         </Link>
       </div>
-    </Container>
+    </AuthLayout>
   );
 }
