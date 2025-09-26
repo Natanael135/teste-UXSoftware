@@ -23,7 +23,6 @@ export default function ProductsPage() {
   const isDebouncing = search !== debouncedSearch;
   const hasSearch = search.trim().length > 0;
 
-  // ...existing code...
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   const {
