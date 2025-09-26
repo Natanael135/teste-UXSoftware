@@ -16,7 +16,7 @@ import { Trash2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
 export default function CartPage() {
-  const { cart, loading, removeProduct, decreaseQuantity } = useCart();
+  const { cart, loading, removeProduct, decreaseQuantity, addProduct } = useCart();
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [frete, setFrete] = useState<string>("");
   const [cep, setCep] = useState("");
@@ -49,79 +49,112 @@ export default function CartPage() {
         <div className="text-center text-muted-foreground">Seu carrinho está vazio.</div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Tabela de produtos */}
+          {/* Produtos */}
           <div className="lg:col-span-2">
-            <Card className="overflow-x-auto">
-              <CardContent className="p-0">
-                <table className="min-w-full text-sm">
-                  <thead>
-                    <tr className="bg-muted text-muted-foreground">
-                      <th className="p-4 text-left font-semibold">Produto</th>
-                      <th className="p-4 text-left font-semibold">Entrega</th>
-                      <th className="p-4 text-left font-semibold">Unitário</th>
-                      <th className="p-4 text-center font-semibold">Quantidade</th>
-                      <th className="p-4 text-right font-semibold">Total</th>
-                      <th className="p-4"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {cart.items.map((item) => (
-                      <tr key={item.product.id} className="border-b border-border last:border-0">
-                        <td className="p-4 min-w-[220px]">
-                          <div className="flex items-center gap-4">
-                            {item.product.imageUrl && (
-                              <AppImage src={item.product.imageUrl} alt={item.product.name} width={60} height={60} className="rounded bg-background border w-16 h-16 object-cover" />
-                            )}
-                            <div>
-                              <div className="font-semibold text-foreground truncate max-w-[180px]">{item.product.name}</div>
-                              <div className="text-xs text-muted-foreground">Vendido e entregue por <span className="font-medium">UX Marketplace</span></div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="p-4 text-center align-middle font-semibold text-green-700 whitespace-nowrap">
+            {/* Cards */}
+            <div className="flex flex-col gap-4 w-full max-w-full">
+              {cart.items.map((item) => (
+                <div
+                  key={item.product.id}
+                  className="rounded-xl border border-border bg-white shadow-md p-4"
+                >
+                  <div className="flex flex-col gap-4 w-full">
+                    {/* Top row: image, name, remove */}
+                    <div className="flex flex-row gap-4 w-full">
+                      {/* Imagem */}
+                      <div className="flex-shrink-0">
+                        {item.product.imageUrl && (
+                          <AppImage src={item.product.imageUrl} alt={item.product.name} width={70} height={70} className="rounded-lg bg-background border w-20 h-20 object-cover" />
+                        )}
+                      </div>
+                      {/* Nome e frete */}
+                      <div className="flex flex-col flex-1 min-w-0 gap-1">
+                        <div className="font-semibold text-foreground text-base leading-tight truncate max-w-full">
+                          {item.product.name}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          Vendido e entregue por <span className="font-medium">UX Marketplace</span>
+                        </div>
+                        <div className="flex items-center gap-2">
                           <Badge variant="secondary">Frete Grátis</Badge>
-                        </td>
-                        <td className="p-4 text-center align-middle whitespace-nowrap">
-                          <div className="flex flex-col items-center">
-                            <span className="line-through text-xs text-muted-foreground">R$ {(item.product.price * 1.07).toFixed(2)}</span>
-                            <span className="font-bold text-accent text-lg">R$ {item.product.price.toFixed(2)}</span>
-                          </div>
-                        </td>
-                        <td className="p-4 text-center align-middle">
-                          <Input
-                            type="number"
-                            min={1}
-                            value={quantities[item.product.id] || item.quantity}
-                            onChange={async (e: ChangeEvent<HTMLInputElement>) => {
-                              const newQ = Number(e.target.value);
-                              setQuantities((q: Record<string, number>) => ({ ...q, [item.product.id]: newQ }));
-                              if (newQ < item.quantity) {
-                                await decreaseQuantity(item.product.id, item.quantity - newQ);
-                                showSuccess("Quantidade atualizada!");
-                              }
-                            }}
-                            className="w-14 h-8 text-sm bg-background text-foreground border border-input text-center mx-auto"
-                            aria-label={`Quantidade de ${item.product.name}`}
-                          />
-                        </td>
-                        <td className="p-4 text-right align-middle font-bold text-accent text-lg whitespace-nowrap min-w-[120px]">
-                          R$ {(item.product.price * (quantities[item.product.id] || item.quantity)).toFixed(2)}
-                        </td>
-                        <td className="p-4 text-center align-middle">
-                          <Button variant="destructive" size="icon" onClick={async () => {
-                            await removeProduct(item.product.id);
-                            showSuccess(`Produto removido do carrinho!`);
-                          }}>
-                            <Trash2 className="h-4 w-4" />
-                            <span className="sr-only">Remover</span>
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </CardContent>
-            </Card>
+                        </div>
+                      </div>
+                      {/* Remover */}
+                      <div className="flex-shrink-0">
+                        <Button variant="ghost" size="icon" onClick={async () => {
+                          await removeProduct(item.product.id);
+                          showSuccess(`Produto removido do carrinho!`);
+                        }}>
+                          <Trash2 className="h-4 w-4" />
+                          <span className="sr-only">Remover</span>
+                        </Button>
+                      </div>
+                    </div>
+                    {/* Bottom row: quantity controls and prices */}
+                    <div className="flex flex-row justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">Quantidade:</span>
+                        <button
+                          type="button"
+                          className="w-8 h-8 flex items-center justify-center text-lg font-bold disabled:opacity-50"
+                          aria-label="Diminuir quantidade"
+                          disabled={loading || (quantities[item.product.id] || item.quantity) <= 1}
+                          onClick={async () => {
+                            const current = quantities[item.product.id] || item.quantity;
+                            if (current > 1) {
+                              setQuantities((q: Record<string, number>) => ({ ...q, [item.product.id]: current - 1 }));
+                              await decreaseQuantity(item.product.id, 1);
+                              showSuccess("Quantidade atualizada!");
+                            }
+                          }}
+                        >
+                          –
+                        </button>
+                        <Input
+                          type="number"
+                          min={1}
+                          value={quantities[item.product.id] || item.quantity}
+                          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            const newQ = Number(e.target.value);
+                            setQuantities((q: Record<string, number>) => ({ ...q, [item.product.id]: newQ }));
+                          }}
+                          onBlur={async () => {
+                            const currentQ = quantities[item.product.id] || item.quantity;
+                            const diff = currentQ - item.quantity;
+                            if (diff > 0) {
+                              await addProduct(item.product.id, diff);
+                              showSuccess("Quantidade atualizada!");
+                            } else if (diff < 0) {
+                              await decreaseQuantity(item.product.id, -diff);
+                              showSuccess("Quantidade atualizada!");
+                            }
+                          }}
+                          className="w-20 h-10 text-base bg-background text-foreground border border-input text-center font-semibold"
+                          aria-label={`Quantidade de ${item.product.name}`}
+                          inputMode="numeric"
+                        />
+                        <button
+                          type="button"
+                          className="w-8 h-8 flex items-center justify-center text-lg font-bold disabled:opacity-50"
+                          aria-label="Aumentar quantidade"
+                          disabled={loading}
+                          onClick={async () => {
+                            await addProduct(item.product.id, 1);
+                            showSuccess("Quantidade atualizada!");
+                          }}
+                        >
+                          +
+                        </button>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="line-through text-xs text-muted-foreground">De R$ {(item.product.price * 1.07).toFixed(2)}</span>
+                        <span className="font-bold text-accent text-base">Por R$ {item.product.price.toFixed(2)} à vista</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
             {/* Entrega */}
             <Card className="mt-6">
               <CardContent>
