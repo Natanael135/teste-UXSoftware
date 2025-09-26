@@ -7,14 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -41,7 +33,7 @@ import { Plus, Edit, Trash2, Search, Package } from "lucide-react";
 import { useProductForm } from "@/hooks/useProductForm";
 import { ProductFormData } from "@/hooks/useProductSchema";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { AppImage } from "@/components/AppImage";
+import { ProductList } from "@/components/Product";
 
 export default function AdminDashboard() {
   const [search, setSearch] = useState("");
@@ -165,91 +157,27 @@ export default function AdminDashboard() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex justify-between items-center mb-4">
-            <div className="relative flex-1 max-w-sm">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+            <div className="relative w-full sm:flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Buscar produtos..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10"
+                className="pl-10 w-full"
               />
             </div>
-            <Button onClick={handleCreate} className="ml-4">
+            <Button onClick={handleCreate} className="w-full sm:w-auto">
               <Plus className="h-4 w-4 mr-2" />
               Novo Produto
             </Button>
           </div>
 
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Imagem</TableHead>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Preço</TableHead>
-                  <TableHead>Categoria</TableHead>
-                  <TableHead>Estoque</TableHead>
-                  <TableHead>Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredProducts.map((product) => (
-                  <TableRow key={product.id}>
-                    <TableCell>
-                      <AppImage
-                        src={product.imageUrl || product.image || ""}
-                        alt={product.name}
-                        width={50}
-                        height={50}
-                        className="rounded object-cover"
-                      />
-                    </TableCell>
-                    <TableCell className="font-medium">{product.name}</TableCell>
-                    <TableCell>R$ {product.price.toFixed(2)}</TableCell>
-                    <TableCell>
-                      {product.category && <Badge variant="secondary">{product.category}</Badge>}
-                    </TableCell>
-                    <TableCell>
-                      {product.stock !== undefined && (
-                        <Badge variant={product.stock > 0 ? "default" : "destructive"}>
-                          {product.stock}
-                        </Badge>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm" onClick={() => handleEdit(product)}>
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant="outline" size="sm">
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Tem certeza que deseja excluir o produto &quot;{product.name}&quot;? Esta ação não pode ser desfeita.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleDelete(product.id)}>
-                                Excluir
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+          <ProductList
+            products={filteredProducts}
+            onEdit={handleEdit}
+            onDelete={(product) => handleDelete(product.id)}
+          />
 
           {filteredProducts.length === 0 && (
             <div className="text-center py-8 text-muted-foreground">
