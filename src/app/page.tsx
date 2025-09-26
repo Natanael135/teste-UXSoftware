@@ -174,15 +174,17 @@ export default function ProductsPage() {
                   ))}
                 </div>
               )}
-              <Pagination
-                currentPage={pagination.page}
-                totalPages={pagination.totalPages}
-                onPageChange={setPage}
-                hasNextPage={pagination.hasNextPage}
-                hasPrevPage={pagination.hasPrevPage}
-              />
             </main>
           </Container>
+          <div className="w-full flex justify-center py-8">
+            <Pagination
+              currentPage={pagination.page}
+              totalPages={pagination.totalPages}
+              onPageChange={setPage}
+              hasNextPage={pagination.hasNextPage}
+              hasPrevPage={pagination.hasPrevPage}
+            />
+          </div>
         </div>
       </div>
     </>
