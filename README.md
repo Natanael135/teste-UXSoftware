@@ -1,43 +1,145 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# UX Marketplace - Frontend
 
-## Getting Started
+Uma aplicação web de e-commerce desenvolvida com Next.js, TypeScript e Tailwind CSS. Parte do desafio para Desenvolvedor Front-End na UX Software.
 
-admin2@example.com
-123456
+## Descrição
 
----
- "email": "joao@example.com",
-  "password": "123456",
+Esta é uma loja online completa com funcionalidades de autenticação, gerenciamento de produtos e carrinho de compras. O frontend consome uma API REST desenvolvida em NestJS.
 
-First, run the development server:
+### Funcionalidades Principais
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Autenticação**: Login e cadastro de usuários com validações.
+- **Produtos**: CRUD completo (Criar, Listar, Visualizar, Editar, Deletar).
+- **Carrinho de Compras**: Adicionar produtos, gerenciar quantidades.
+- **Interface Responsiva**: Design moderno e acessível.
+- **Validações**: Formulários com máscaras e confirmações.
+
+## Tecnologias Utilizadas
+
+- **Framework**: Next.js 15
+- **Linguagem**: TypeScript
+- **Estilização**: Tailwind CSS + shadcn/ui
+- **Gerenciamento de Estado**: Zustand
+- **Formulários**: React Hook Form + Zod
+- **HTTP Client**: Axios
+- **Notificações**: Sonner (toasts)
+- **Ícones**: Lucide React
+- **Outros**: Remask (máscaras)
+
+## Requisitos Atendidos
+
+Conforme desafio da UX Software:
+
+1. **Geral**: 3+ páginas (Login, Cadastro, Produtos), produtos como home, tratamento de mensagens API
+2. **Login**: Link para iniciar cadastro
+3. **Cadastro**: Campos CPF, nome, email, telefone, senha; validação e confirmação; máscara CPF/telefone; alerta para CPF duplicado
+4. **Produtos**: CRUD completo via interface admin
+5. **Carrinho**: Adicionar produtos, fluxo básico
+
+## Pré-requisitos
+
+- Node.js 18+
+- npm ou yarn
+- API backend rodando (ver <https://github.com/ux-software/marketplace-api>)
+
+## Instalação e Execução
+
+1. **Clone o repositorio**:
+
+   ```bash
+   git clone https://github.com/Natanael135/teste-UXSoftware.git
+   ```
+
+2. **Navegue ate o projeto**:
+   ```bash
+   cd teste-UXSoftware
+   ```
+
+3. **Instale as dependências**:
+
+   ```bash
+   npm install
+   ```
+
+4. **Configure variáveis de ambiente**:
+   Crie um arquivo `.env.local` na raiz:
+
+   ```env
+   NEXT_PUBLIC_API_URL=http://localhost:3001
+   ```
+
+5. **Execute o projeto**:
+
+   ```bash
+   npm run dev
+   ```
+
+6. **Acesse**: `http://localhost:3000`
+
+## Estrutura do Projeto
+
+```
+plaintext
+src/
+├── app/                    # Páginas (Next.js App Router)
+│   ├── admin/dashboard/    # Dashboard admin (CRUD produtos)
+│   ├── cart/               # Página do carrinho
+│   ├── login/              # Página de login
+│   ├── products/[id]/      # Detalhes do produto
+│   ├── register/           # Cadastro de usuário
+│   ├── layout.tsx          # Layout global
+│   └── page.tsx            # Home (listagem produtos)
+├── components/             # Componentes reutilizáveis
+│   ├── AppImage.tsx        # Componente para imagens
+│   ├── AuthLayout.tsx      # Layout para páginas de auth
+│   ├── Cart/               # Componentes do carrinho
+│   ├── Container.tsx       # Container responsivo
+│   ├── footer/             # Componentes do footer
+│   ├── LoadingSpinner.tsx  # Spinner de carregamento
+│   ├── Navbar/             # Componentes da navbar
+│   ├── Pagination/         # Componentes de paginação
+│   ├── Product/            # Componentes de produto
+│   ├── ProductCard/        # Card de produto
+│   ├── ProductFilters/     # Filtros de produto
+│   └── ui/                 # Componentes base (shadcn/ui)
+├── contexts/               # Contextos React
+├── hooks/                  # Hooks customizados
+├── lib/                    # Utilitários
+├── services/               # Configuração API
+├── store/                  # Estado global (Zustand)
+├── types/                  # Definições TypeScript
+└── utils/                  # Funções auxiliares
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts Disponíveis
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `npm run dev` - Inicia servidor de desenvolvimento
+- `npm run build` - Build para produção
+- `npm run lint` - Executa ESLint
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Credenciais de Teste
 
-## Learn More
+### Usuário Admin
 
-To learn more about Next.js, take a look at the following resources:
+- Email: ``
+- Senha: ``
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Usuário Comum
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Email: ``
+- Senha: ``
 
-## Deploy on Vercel
+## Contribuição
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
+3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`)
+4. Push para a branch (`git push origin feature/nova-feature`)
+5. Abra um Pull Request
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Licença
+
+Este projeto é parte de um desafio técnico e não possui licença específica.
+
+---
+Desenvolvido para o desafio UX Software - Desenvolvedor Front-End 2025
