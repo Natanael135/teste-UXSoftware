@@ -10,10 +10,7 @@ import { ProductFilters } from "@/components/ProductFilters";
 import { Pagination } from "@/components/Pagination";
 import { Filter } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { useAuthStore } from "@/store/auth";
-import { AuthModal } from "@/components/ui/auth-modal";
 import React, { useState, useEffect } from "react";
-import { useCart } from "@/contexts/cartApi";
 
 
 export default function ProductsPage() {
@@ -22,8 +19,6 @@ export default function ProductsPage() {
   const debouncedSearch = useDebounce(search, 1000);
   const isDebouncing = search !== debouncedSearch;
   const hasSearch = search.trim().length > 0;
-
-  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const {
     filteredProducts,
@@ -44,12 +39,8 @@ export default function ProductsPage() {
 
 
 
-  // (Removido: declaração duplicada de hasSearch)
   return (
     <>
-      <AuthModal open={showAuthModal} onOpenChange={setShowAuthModal} />
-      {/* Layout flex para sidebar e conteúdo principal */}
-      {/* Layout flex para sidebar e conteúdo principal */}
   <div className="flex min-h-full flex-1 ">
     {/* Sidebar lateral fora do Container, sem padding */}
     <aside className="hidden lg:block w-64 shrink-0 h-full flex flex-col bg-background/95 border-r border-border animate-fade-in">

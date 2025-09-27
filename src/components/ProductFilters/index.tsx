@@ -76,5 +76,3 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
   );
 
 };
-
-// (MobileFiltersModal removido)
