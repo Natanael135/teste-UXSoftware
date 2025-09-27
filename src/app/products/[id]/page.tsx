@@ -41,7 +41,7 @@ export default function ProductDetailPage() {
       });
   }, [id]);
 
-  // Produtos reais para Compre Junto
+  // Produtos para Compre Junto
   const [compreJunto, setCompreJunto] = useState<Product[]>([]);
   useEffect(() => {
     api.get<{ products: Product[] }>("/products")
@@ -105,7 +105,6 @@ export default function ProductDetailPage() {
   return (
     <Container className="py-8 max-w-7xl animate-fade-in">
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Galeria lateral */}
         <div className="hidden lg:flex flex-col gap-2 items-center min-w-[80px]">
           {images.map((img, idx) => (
             <button key={img+idx} className={`border rounded-lg p-1 bg-background ${mainImage === img ? 'border-accent' : 'border-border'}`} onClick={() => setMainImage(img)}>
@@ -113,11 +112,9 @@ export default function ProductDetailPage() {
             </button>
           ))}
         </div>
-        {/* Imagem principal */}
         <div className="flex-1 flex flex-col items-center justify-center">
           <Image src={mainImage} alt={product.name} width={380} height={380} className="rounded-lg shadow-lg w-full max-w-md object-contain bg-background" unoptimized />
         </div>
-        {/* Resumo do produto */}
         <div className="w-full lg:w-[420px]">
           <Card className="p-0">
             <CardContent className="p-6">
@@ -148,7 +145,6 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      {/* Compre Junto (produtos reais) */}
       <div className="mt-12">
         <h3 className="text-lg font-bold mb-3">Aproveite e Compre Junto</h3>
         <div className="flex flex-wrap gap-4 items-stretch">
@@ -162,7 +158,6 @@ export default function ProductDetailPage() {
               </Card>
             </React.Fragment>
           ))}
-          {/* Sinal de = e total */}
           <div className="flex items-center justify-center text-3xl font-bold text-muted-foreground">=</div>
           <Card className="flex flex-col items-center justify-center min-w-[220px] max-w-xs bg-muted/60 p-4">
             <div className="font-semibold text-lg mb-2 text-center">Compre os {compreJuntoProdutos.length} produtos</div>
@@ -177,7 +172,6 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      {/* Modal de Autenticação */}
       <AuthModal open={showAuthModal} onOpenChange={setShowAuthModal} />
     </Container>
   );

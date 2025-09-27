@@ -18,10 +18,8 @@ export default function CartPage() {
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
-    // Só redirecionar se não estiver autenticado
     if (!user || !token) {
       setShowAuthModal(true);
-      // Redirecionar após um delay para dar tempo de ver o modal
       const timeoutId = setTimeout(() => {
         router.push('/');
       }, 3000);
@@ -81,7 +79,7 @@ export default function CartPage() {
   };
 
   const handleCheckout = () => {
-    // Implementar checkout
+    // TODO: implementar checkout futuro
   };
 
   if (!user || !token) {

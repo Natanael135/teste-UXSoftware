@@ -43,7 +43,6 @@ export default function LoginPage() {
   const res = await api.post<{ user: import("@/types/user").User; accessToken: string }>("/auth/login", data);
       login(res.user, res.accessToken);
       showSuccess("Login realizado com sucesso!");
-      // Se for admin, redireciona para dashboard admin
       if (res.user && res.user.role === "ADMIN") {
         router.push("/admin/dashboard");
       } else {
