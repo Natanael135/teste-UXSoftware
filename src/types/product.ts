@@ -12,10 +12,3 @@ export type Product = {
   color?: string;
   stock?: number;
 };
-
-export type Comment = {
-  id: string;
-  user: string;
-  rating: number;
-  comment?: string;
-};
