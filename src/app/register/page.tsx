@@ -1,6 +1,6 @@
 "use client";
 import { useRegisterForm } from "@/hooks/useRegisterForm";
-import type { RegisterFormData } from "@/hooks/useRegisterSchema";
+import type { RegisterFormData } from "@/types/form";
 import { api } from "@/services/api";
 import { showError, showSuccess } from "@/utils/toast";
 import Link from "next/link";
@@ -27,7 +27,6 @@ export default function RegisterPage() {
   const user = useAuthStore((s) => s.user);
   const isHydrated = useAuthStore((s) => s.isHydrated);
 
-  // Redirecionar usuários logados
   useEffect(() => {
     if (isHydrated && user) {
       router.push("/account");

@@ -2,29 +2,7 @@ import * as React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-
-export interface FormInputProps {
-  label?: string;
-  error?: string;
-  onChange?: (value: string) => void;
-  containerClassName?: string;
-  prefix?: React.ReactNode;
-  className?: string;
-  type?: string;
-  placeholder?: string;
-  value?: string | number;
-  min?: string | number;
-  max?: string | number;
-  step?: string | number;
-  accept?: string;
-  disabled?: boolean;
-  required?: boolean;
-  id?: string;
-  name?: string;
-  title?: string;
-  style?: React.CSSProperties;
-  "aria-label"?: string;
-}
+import type { FormInputProps } from "@/types/form";
 
 const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
   ({ className, type, label, error, onChange, containerClassName, prefix, ...props }, ref) => {

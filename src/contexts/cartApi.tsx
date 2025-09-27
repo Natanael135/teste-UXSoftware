@@ -4,28 +4,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { api } from "@/services/api";
 import { useAuthStore } from "@/store/auth";
 import { handleApiErrorWithToast } from "@/utils/api-error";
-
-export interface CartItem {
-  product: {
-    id: string;
-    name: string;
-    price: number;
-    imageUrl?: string;
-    description?: string;
-  };
-  quantity: number;
-  itemTotal: number;
-}
-
-export interface Cart {
-  cartId: string;
-  userId: string;
-  items: CartItem[];
-  totalItems: number;
-  totalPrice: number;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { Cart } from "@/types/cart";
 
 interface CartContextProps {
   cart: Cart | null;

@@ -1,5 +1,4 @@
 "use client";
-// Navbar é global, não importar aqui
 import { useProducts } from "@/hooks/useProducts";
 import { useSearchStore } from "@/store/search";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -32,7 +31,6 @@ export default function ProductsPage() {
     setPage
   } = useProducts();
 
-  // Sincronizar o search do store com o hook useProducts
   useEffect(() => {
     setFilters.setSearch(debouncedSearch);
   }, [debouncedSearch, setFilters]);
@@ -42,7 +40,6 @@ export default function ProductsPage() {
   return (
     <>
   <div className="flex min-h-full flex-1 ">
-    {/* Sidebar lateral fora do Container, sem padding */}
     <aside className="hidden lg:block w-64 shrink-0 h-full flex flex-col bg-background/95 border-r border-border animate-fade-in">
       <div className="flex-1 overflow-y-auto p-6 mb-10">
         <ProductFilters
@@ -57,10 +54,8 @@ export default function ProductsPage() {
         />
       </div>
     </aside>
-    {/* Conteúdo principal centralizado, com padding apenas no Container */}
     <div className="flex-1 h-full flex flex-col">
   <Container className="relative h-full py-4">
-            {/* Título e subtítulo centralizados */}
             {!hasSearch && (
               <div className="mb-4 text-center">
                 <h1 className="text-3xl font-extrabold tracking-tight text-primary drop-shadow-lg animate-fade-in">Produtos em Destaque</h1>
@@ -72,7 +67,6 @@ export default function ProductsPage() {
                 Resultado para <span className="font-semibold text-accent">&quot;{debouncedSearch}&quot;</span>
               </div>
             )}
-            {/* Botão de filtro mobile acima do conteúdo */}
             <div className="lg:hidden w-full mb-4">
               <Dialog open={showMobileFilters} onOpenChange={setShowMobileFilters}>
                 <button
@@ -108,7 +102,6 @@ export default function ProductsPage() {
                 </DialogContent>
               </Dialog>
             </div>
-            {/* Conteúdo principal */}
             <main>
               {(loading || isDebouncing) ? (
                 <LoadingSpinner size="md" fullscreen={false} className="min-h-[200px]" />

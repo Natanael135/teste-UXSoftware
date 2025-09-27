@@ -8,7 +8,7 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { CartList } from "../CartList";
 import { CartSummary } from "../CartSummary";
 import Link from "next/link";
-import type { CartItem } from "@/contexts/cartApi";
+import type { CartItem } from "@/types/cart";
 
 interface CartContainerProps {
   cart: { items: CartItem[]; totalPrice: number } | null;

@@ -20,7 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Search, Package } from "lucide-react";
 import { useProductForm } from "@/hooks/useProductForm";
-import { ProductFormData } from "@/hooks/useProductSchema";
+import type { ProductFormData } from "@/types/form";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { ProductList } from "@/components/Product";
 import { handleApiErrorWithToast } from "@/utils/api-error";
@@ -40,10 +40,8 @@ export default function AdminDashboard() {
   const form = useProductForm();
 
   useEffect(() => {
-    // Aguardar hidratação do estado antes de verificar
     if (!isHydrated) return;
 
-    // Verificação de segurança no frontend (apenas para UX, segurança real é no backend)
     if (!user || user.role !== "ADMIN") {
       router.push("/");
       return;

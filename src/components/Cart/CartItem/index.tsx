@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Trash2 } from "lucide-react";
 import React, { ChangeEvent } from "react";
-import type { CartItem } from "@/contexts/cartApi";
+import type { CartItem } from "@/types/cart";
 
 interface CartItemProps {
   item: CartItem;
@@ -32,9 +32,7 @@ export function CartItem({
   return (
     <div className="rounded-xl border border-border bg-white shadow-md p-4">
       <div className="flex flex-col gap-4 w-full">
-        {/* Top row: image, name, remove */}
         <div className="flex flex-row gap-4 w-full">
-          {/* Imagem */}
           <div className="flex-shrink-0">
             {item.product.imageUrl && (
               <AppImage
@@ -46,7 +44,6 @@ export function CartItem({
               />
             )}
           </div>
-          {/* Nome e frete */}
           <div className="flex flex-col flex-1 min-w-0 gap-1">
             <div className="font-semibold text-foreground text-base leading-tight truncate max-w-full">
               {item.product.name}
@@ -58,7 +55,6 @@ export function CartItem({
               <Badge variant="secondary">Frete Grátis</Badge>
             </div>
           </div>
-          {/* Remover */}
           <div className="flex-shrink-0">
             <Button variant="ghost" size="icon" onClick={onRemove}>
               <Trash2 className="h-4 w-4" />
@@ -66,7 +62,6 @@ export function CartItem({
             </Button>
           </div>
         </div>
-        {/* Bottom row: quantity controls and prices */}
         <div className="flex flex-row justify-between items-center">
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium">Quantidade:</span>

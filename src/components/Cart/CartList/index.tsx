@@ -1,7 +1,7 @@
 "use client";
 
 import { CartItem } from "../CartItem";
-import type { CartItem as CartItemType } from "@/contexts/cartApi";
+import type { CartItem as CartItemType } from "@/types/cart";
 
 interface CartListProps {
   items: CartItemType[];
