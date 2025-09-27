@@ -28,7 +28,11 @@ export default function LoginPage() {
   // Redirecionar usuários logados
   useEffect(() => {
     if (isHydrated && user) {
-      router.push("/account");
+      if (user.role === "ADMIN") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/");
+      }
     }
   }, [user, isHydrated, router]);
 
