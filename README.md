@@ -51,7 +51,8 @@ Conforme desafio da UX Software:
    ```
 
 2. **Navegue ate o projeto**:
-   ```bash
+
+   ``` bash
    cd teste-UXSoftware
    ```
 
@@ -78,8 +79,7 @@ Conforme desafio da UX Software:
 
 ## Estrutura do Projeto
 
-```
-plaintext
+```bash
 src/
 ├── app/                    # Páginas (Next.js App Router)
 │   ├── admin/dashboard/    # Dashboard admin (CRUD produtos)
