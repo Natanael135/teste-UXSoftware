@@ -49,10 +49,19 @@ export default function LoginPage() {
         router.push("/");
       }
     } catch (err: unknown) {
-      if (typeof err === "object" && err && "response" in err && err.response && typeof err.response === "object" && "data" in err.response && err.response.data && typeof err.response.data === "object" && "message" in err.response.data) {
-        showError((err.response.data as { message?: string }).message || "Erro ao fazer login");
+      const error = err as Error & { status?: number; data?: { message?: string; errors?: Record<string, string> } };
+      if (error.status === 401) {
+        form.setError('password', { message: 'Email ou senha incorreto' });
+        form.setError('email', { message: '' }); // Para destacar borda
+        showError('Email ou senha incorreto');
+      } else if (error.data?.errors) {
+        Object.entries(error.data.errors).forEach(([field, message]) => {
+          if (['email', 'password'].includes(field)) {
+            form.setError(field as 'email' | 'password', { message: message as string });
+          }
+        });
       } else {
-        showError("Erro ao fazer login");
+        showError(error.message || "Erro ao fazer login");
       }
     } finally {
       setLoading(false);
