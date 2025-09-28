@@ -52,7 +52,7 @@ export default function LoginPage() {
       const error = err as Error & { status?: number; data?: { message?: string; errors?: Record<string, string> } };
       if (error.status === 401) {
         form.setError('password', { message: 'Email ou senha incorreto' });
-        form.setError('email', { message: '' }); // Para destacar borda
+        form.setError('email', { message: '' });
         showError('Email ou senha incorreto');
       } else if (error.data?.errors) {
         Object.entries(error.data.errors).forEach(([field, message]) => {
@@ -115,7 +115,12 @@ export default function LoginPage() {
         Ao continuar com o acesso, você concorda com o nosso Termo de Uso e Politicas de Privacidade.
       </p>
       <div className="text-center mt-4">
-        <Link href="/register" className="text-secondary hover:underline hover:text-accent transition-colors">
+        <Link href="/forgot-password" className="text-secondary hover:underline hover:text-accent transition-colors">
+          Esqueceu sua senha?
+        </Link>
+      </div>
+      <div className="text-center mt-4">
+         <Link href="/register" className="text-secondary hover:underline hover:text-accent transition-colors">
           Não tem conta? Cadastre-se
         </Link>
       </div>
