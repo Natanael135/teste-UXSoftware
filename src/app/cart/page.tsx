@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { AuthModal } from "@/components/ui/auth-modal";
 
 export default function CartPage() {
-  const { cart, loading, removeProduct, decreaseQuantity, addProduct } = useCart();
+  const { cart, loading, removeProduct, decreaseQuantity, addProduct, clearCart } = useCart();
   const { user, token } = useAuthStore();
   const router = useRouter();
   const [quantities, setQuantities] = useState<Record<string, number>>({});
@@ -82,6 +82,11 @@ export default function CartPage() {
     // TODO: implementar checkout futuro
   };
 
+  const handleClearCart = async () => {
+    await clearCart();
+    showSuccess("Carrinho limpo!");
+  };
+
   if (!user || !token) {
     return (
       <>
@@ -103,6 +108,7 @@ export default function CartPage() {
       onIncrease={handleIncrease}
       onRemove={handleRemove}
       onCheckout={handleCheckout}
+      onClearCart={handleClearCart}
     />
   );
 }

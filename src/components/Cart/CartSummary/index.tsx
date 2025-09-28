@@ -10,9 +10,10 @@ interface CartSummaryProps {
   descontos: number;
   total: number;
   onCheckout: () => void;
+  onClearCart: () => void;
 }
 
-export function CartSummary({ subtotal, descontos, total, onCheckout }: CartSummaryProps) {
+export function CartSummary({ subtotal, descontos, total, onCheckout, onClearCart }: CartSummaryProps) {
   return (
     <Card>
       <CardContent className="space-y-4 p-6">
@@ -38,6 +39,9 @@ export function CartSummary({ subtotal, descontos, total, onCheckout }: CartSumm
         <Button className="w-full h-12 text-lg font-bold bg-accent hover:bg-primary text-white rounded-lg mt-2" onClick={onCheckout}>
           <ShoppingCart className="h-5 w-5 mr-2" />
           FINALIZAR COMPRA
+        </Button>
+        <Button variant="outline" size="sm" className="w-full mt-2 text-sm" onClick={onClearCart}>
+          Limpar Carrinho
         </Button>
       </CardContent>
     </Card>

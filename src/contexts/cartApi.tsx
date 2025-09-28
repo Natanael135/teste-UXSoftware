@@ -13,6 +13,7 @@ interface CartContextProps {
   addProduct: (productId: string, quantity: number) => Promise<void>;
   removeProduct: (productId: string) => Promise<void>;
   decreaseQuantity: (productId: string, quantity: number) => Promise<void>;
+  clearCart: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -88,6 +89,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function clearCart() {
+    if (!token || !cart) return;
+    setLoading(true);
+    try {
+      // Remove todos os produtos do carrinho
+      for (const item of cart.items) {
+        await api.delete("/cart/remove-product", { productId: item.product.id }, true);
+      }
+      await fetchCart();
+    } catch (error) {
+      handleApiErrorWithToast(error, "Erro ao limpar carrinho");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     if (token) fetchCart();
     else setCart(null);
@@ -95,7 +112,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [token]);
 
   return (
-    <CartContext.Provider value={{ cart, loading, fetchCart, addProduct, removeProduct, decreaseQuantity }}>
+    <CartContext.Provider value={{ cart, loading, fetchCart, addProduct, removeProduct, decreaseQuantity, clearCart }}>
       {children}
     </CartContext.Provider>
   );

@@ -24,6 +24,7 @@ interface CartContainerProps {
   onIncrease: (productId: string) => void;
   onRemove: (productId: string) => void;
   onCheckout: () => void;
+  onClearCart: () => void;
 }
 
 export function CartContainer({
@@ -40,6 +41,7 @@ export function CartContainer({
   onIncrease,
   onRemove,
   onCheckout,
+  onClearCart,
 }: CartContainerProps) {
   const subtotal = cart?.totalPrice || 0;
   const descontos = subtotal > 0 ? subtotal * 0.05 : 0;
@@ -98,6 +100,7 @@ export function CartContainer({
               descontos={descontos}
               total={total}
               onCheckout={onCheckout}
+              onClearCart={onClearCart}
             />
             <div className="text-center text-muted-foreground text-sm">
               <Link href="/products" className="underline hover:text-accent">
