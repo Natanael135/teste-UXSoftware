@@ -40,11 +40,19 @@ export default function RegisterPage() {
       showSuccess("Cadastro realizado com sucesso!");
       router.push("/login");
     } catch (err: unknown) {
-      const error = err as { response?: { status?: number; data?: { message?: string } } };
-      if (error.response?.status === 409) {
-        showError("CPF já cadastrado");
+      const error = err as Error & { status?: number; data?: { message?: string; errors?: Record<string, string> } };
+      console.log('Erro no registro:', { status: error.status, data: error.data }); // Debug
+      if (error.status === 409) {
+        form.setError('cpf', { message: 'CPF já cadastrado' });
+        showError('CPF já cadastrado');
+      } else if (error.data?.errors) {
+        Object.entries(error.data.errors).forEach(([field, message]) => {
+          if (['cpf', 'name', 'email', 'phone', 'password', 'confirmPassword'].includes(field)) {
+            form.setError(field as keyof RegisterFormData, { message: message as string });
+          }
+        });
       } else {
-        showError(error.response?.data?.message || "Erro ao cadastrar");
+        showError(error.message || "Erro ao cadastrar");
       }
     } finally {
       setLoading(false);
