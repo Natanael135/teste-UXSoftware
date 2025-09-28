@@ -79,7 +79,51 @@ export default function CartPage() {
   };
 
   const handleCheckout = () => {
-    // TODO: implementar checkout futuro
+    if (!cart || cart.items.length === 0) {
+      console.log("Carrinho vazio, não é possível finalizar compra.");
+      return;
+    }
+
+    if (!user) {
+      console.log("Usuário não autenticado.");
+      return;
+    }
+
+    const subtotal = cart.totalPrice;
+    const descontos = subtotal > 0 ? subtotal * 0.05 : 0;
+    const total = subtotal - descontos;
+
+    const order = {
+      userId: user.id,
+      userName: user.name,
+      userEmail: user.email,
+      items: cart.items.map(item => ({
+        productId: item.product.id,
+        productName: item.product.name,
+        quantity: item.quantity,
+        unitPrice: item.product.price,
+        subtotal: item.product.price * item.quantity
+      })),
+      subtotal: subtotal,
+      discounts: descontos,
+      total: total,
+      shipping: frete || "Não calculado",
+      cep: cep || "Não informado",
+      orderDate: new Date().toISOString(),
+      status: "pending"
+    };
+
+    console.log("Enviando pedido para processamento:");
+    console.log(JSON.stringify(order, null, 2));
+
+    // simulando envio para API
+    console.log("Processando pagamento...");
+    setTimeout(() => {
+      console.log("Pedido criado com sucesso! ID do pedido: ORDER-" + Date.now());
+      // Aqui poderia limpar o carrinho ou redirecionar
+      // clearCart();
+      // router.push('/pedidos');
+    }, 2000);
   };
 
   const handleClearCart = async () => {
