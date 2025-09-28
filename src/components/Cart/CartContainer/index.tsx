@@ -82,7 +82,7 @@ export function CartContainer({
                   />
                   <Button
                     variant="outline"
-                    className="font-bold text-green-700 border-green-600"
+                    className="font-bold text-green-700 border-green-600 hover:text-accent"
                     onClick={onCalcularFrete}
                   >
                     CALCULAR
