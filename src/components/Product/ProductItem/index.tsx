@@ -87,10 +87,7 @@ export function ProductItem({ product, onEdit, onDelete }: ProductItemProps) {
         {/* Bottom row: price and rating */}
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-col">
-            <span className="font-bold text-accent text-lg">R$ {product.price.toFixed(2)}</span>
-            {product.rating && (
-              <span className="text-sm text-muted-foreground">⭐ {product.rating}/5</span>
-            )}
+            <span className="font-bold text-accent text-lg">R$ {product.price.toFixed(2)}</span>         
           </div>
           <div className="text-right">
             <p className="text-sm text-muted-foreground line-clamp-2">{product.description}</p>

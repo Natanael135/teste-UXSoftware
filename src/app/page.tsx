@@ -39,23 +39,23 @@ export default function ProductsPage() {
 
   return (
     <>
-  <div className="flex min-h-full flex-1 ">
-    <aside className="hidden lg:block w-64 shrink-0 h-full flex flex-col bg-background/95 border-r border-border animate-fade-in">
-      <div className="flex-1 overflow-y-auto p-6 mb-10">
-        <ProductFilters
-          minPrice={filters.minPrice} setMinPrice={setFilters.setMinPrice}
-          maxPrice={filters.maxPrice} setMaxPrice={setFilters.setMaxPrice}
-          category={filters.category} setCategory={setFilters.setCategory} categories={categories}
-          brand={filters.brand} setBrand={setFilters.setBrand} brands={brands}
-          color={filters.color} setColor={setFilters.setColor} colors={colors}
-          minRating={filters.minRating} setMinRating={setFilters.setMinRating}
-          freeShipping={filters.freeShipping} setFreeShipping={setFilters.setFreeShipping}
-          sort={filters.sort} setSort={setFilters.setSort}
-        />
-      </div>
-    </aside>
-    <div className="flex-1 h-full flex flex-col">
-  <Container className="relative h-full py-4">
+      <div className="flex min-h-full flex-1 ">
+        <aside className="hidden lg:block w-64 shrink-0 h-full flex flex-col bg-background/95 border-r border-border animate-fade-in">
+          <div className="flex-1 overflow-y-auto p-6 mb-10">
+            <ProductFilters
+              minPrice={filters.minPrice} setMinPrice={setFilters.setMinPrice}
+              maxPrice={filters.maxPrice} setMaxPrice={setFilters.setMaxPrice}
+              category={filters.category} setCategory={setFilters.setCategory} categories={categories}
+              brand={filters.brand} setBrand={setFilters.setBrand} brands={brands}
+              color={filters.color} setColor={setFilters.setColor} colors={colors}
+              minRating={filters.minRating} setMinRating={setFilters.setMinRating}
+              freeShipping={filters.freeShipping} setFreeShipping={setFilters.setFreeShipping}
+              sort={filters.sort} setSort={setFilters.setSort}
+            />
+          </div>
+        </aside>
+        <div className="flex-1 h-full flex flex-col">
+          <Container className="relative h-full py-4">
             {!hasSearch && (
               <div className="mb-4 text-center">
                 <h1 className="text-3xl font-extrabold tracking-tight text-primary drop-shadow-lg animate-fade-in">Produtos em Destaque</h1>
@@ -115,16 +115,7 @@ export default function ProductsPage() {
                       id={product.id}
                       name={product.name}
                       price={product.price}
-                      image={
-                        product.imageUrl
-                          ? product.imageUrl.includes('/uploads/')
-                            ? product.imageUrl
-                            : product.imageUrl.replace(
-                                /onrender\.com\/?(uploads\/)?/,
-                                'onrender.com/uploads/'
-                              )
-                          : product.image
-                      }
+                      image={product.imageUrl || product.image}
                       imageUrl={product.imageUrl}
                       description={product.description}
                       animationDelay={idx * 80}
