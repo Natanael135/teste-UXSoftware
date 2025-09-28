@@ -65,6 +65,7 @@ export default function RegisterPage() {
                   <Input
                     type="text"
                     {...field}
+                    value={field.value || ""}
                     onChange={(e) => field.onChange(mask(e.target.value, "999.999.999-99"))}
                     placeholder="000.000.000-00"
                     autoComplete="off"
@@ -118,6 +119,7 @@ export default function RegisterPage() {
                   <Input
                     type="text"
                     {...field}
+                    value={field.value || ""}
                     onChange={(e) => field.onChange(mask(e.target.value, "(99) 99999-9999"))}
                     placeholder="(00) 00000-0000"
                     autoComplete="tel"
