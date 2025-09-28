@@ -19,8 +19,12 @@ async function request<T>(url: string, options: RequestInit = {}, auth = false):
   });
   if (!res.ok) {
     let errorMsg = "Erro na requisição";
-    try { const data = await res.json(); errorMsg = data.message || errorMsg; } catch {}
-    throw new Error(errorMsg);
+    let errorData: unknown = {};
+    try { errorData = await res.json(); errorMsg = (errorData as { message?: string }).message || errorMsg; } catch {}
+    const error = new Error(errorMsg) as Error & { status: number; data: unknown };
+    error.status = res.status;
+    error.data = errorData;
+    throw error;
   }
   return res.json();
 }
