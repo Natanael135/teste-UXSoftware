@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useCart } from "@/contexts/cartApi";
 import { showSuccess } from "@/utils/toast";
 import type { Product } from "@/types/product";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Plus } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { AuthModal } from "@/components/ui/auth-modal";
 import { handleApiErrorWithToast } from "@/utils/api-error";
@@ -135,7 +135,8 @@ export default function ProductDetailPage() {
                     COMPRAR
                   </Button>
                   <Button variant="outline" className="w-full h-10 text-base font-semibold mt-1" onClick={() => handleAddToCart()}>
-                    <span className="mr-2">➕</span> Adicionar ao carrinho
+                    <Plus className="h-4 w-4 mr-2" />
+                    Adicionar ao carrinho
                   </Button>
                 </div>
                 <div className="text-xs text-muted-foreground mt-2">Vendido e entregue por <span className="font-semibold">UX Marketplace</span></div>
@@ -147,19 +148,19 @@ export default function ProductDetailPage() {
 
       <div className="mt-12">
         <h3 className="text-lg font-bold mb-3">Aproveite e Compre Junto</h3>
-        <div className="flex flex-wrap gap-4 items-stretch">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-stretch">
           {compreJuntoProdutos.map((prod, idx) => (
             <React.Fragment key={prod?.id}>
-              {idx > 0 && <div className="flex items-center justify-center text-3xl font-bold text-muted-foreground">+</div>}
-              <Card className="flex-1 w-[180px] flex flex-col items-center p-4">
+              {idx > 0 && <div className="flex items-center justify-center text-3xl font-bold text-muted-foreground lg:flex-col lg:justify-center lg:items-center">+</div>}
+              <Card className="flex-1 w-full lg:w-[180px] flex flex-col items-center p-4">
                 <Image src={prod?.imageUrl || prod?.image || 'https://placehold.co/100x100?text=Produto'} alt={prod?.name || ''} width={100} height={100} className="object-cover rounded mb-2 bg-background" unoptimized />
                 <div className="font-semibold text-sm mb-1 text-foreground text-center">{prod?.name}</div>
                 <div className="text-accent font-bold text-base mb-1">R$ {prod?.price?.toFixed(2)} no PIX</div>
               </Card>
             </React.Fragment>
           ))}
-          <div className="flex items-center justify-center text-3xl font-bold text-muted-foreground">=</div>
-          <Card className="flex-1 w-[180px] flex flex-col items-center justify-center bg-muted/60 p-4">
+          <div className="flex items-center justify-center text-3xl font-bold text-muted-foreground lg:flex-col lg:justify-center lg:items-center">=</div>
+          <Card className="flex-1 w-full lg:w-[180px] flex flex-col items-center justify-center bg-muted/60 p-4">
             <div className="font-semibold text-lg mb-2 text-center">Compre os {compreJuntoProdutos.length} produtos</div>
             <div className="line-through text-xs text-muted-foreground">
               R$ {compreJuntoProdutos.reduce((acc, p) => acc + (p?.price || 0) * 1.07, 0).toFixed(2)}
