@@ -17,7 +17,7 @@ export function CartSummary({ subtotal, descontos, total, onCheckout, onClearCar
   return (
     <Card>
       <CardContent className="space-y-4 p-6">
-        <Button variant="outline" className="w-full font-bold text-green-700 border-green-600">
+        <Button variant="outline" className="w-full font-bold text-green-700 border-green-600 hover:text-accent">
           INSERIR CUPOM DE DESCONTO
         </Button>
         <div className="border rounded-lg p-4 space-y-2 bg-muted/40">
@@ -40,7 +40,7 @@ export function CartSummary({ subtotal, descontos, total, onCheckout, onClearCar
           <ShoppingCart className="h-5 w-5 mr-2" />
           FINALIZAR COMPRA
         </Button>
-        <Button variant="outline" size="sm" className="w-full mt-2 text-sm" onClick={onClearCart}>
+        <Button variant="outline" size="sm" className="w-full mt-2 text-sm hover:text-accent" onClick={onClearCart}>
           Limpar Carrinho
         </Button>
       </CardContent>
