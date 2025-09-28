@@ -102,6 +102,9 @@ export default function LoginPage() {
           </Button>
         </form>
       </Form>
+      <p className="text-sm text-muted-foreground mt-4 text-center">
+        Ao continuar com o acesso, você concorda com o nosso Termo de Uso e Politicas de Privacidade.
+      </p>
       <div className="text-center mt-4">
         <Link href="/register" className="text-secondary hover:underline hover:text-accent transition-colors">
           Não tem conta? Cadastre-se
