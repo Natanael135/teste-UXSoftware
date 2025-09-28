@@ -11,7 +11,7 @@ interface AuthModalProps {
 export function AuthModal({ open, onOpenChange }: AuthModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] max-w-md mx-auto rounded-xl p-6 shadow-xl border border-border">
+      <DialogContent className="w-[95vw] max-w-md mx-auto rounded-xl p-6 shadow-xl border border-border fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <DialogTitle className="sr-only">Acesso necessário</DialogTitle>
         <DialogDescription className="sr-only">
           Para adicionar produtos ao seu carrinho, você precisa estar logado em sua conta.
