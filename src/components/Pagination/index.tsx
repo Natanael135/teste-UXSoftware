@@ -53,7 +53,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         size="sm"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={!hasPrevPage}
-        className="flex items-center gap-1 min-w-[80px] justify-center h-8 px-3 text-xs"
+        className="flex items-center gap-1 min-w-[80px] justify-center h-8 px-3 text-xs hover:text-accent"
       >
         <ChevronLeft className="w-3 h-3" />
         Anterior
@@ -69,7 +69,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                 variant={page === currentPage ? "default" : "outline"}
                 size="sm"
                 onClick={() => onPageChange(page as number)}
-                className="w-8 h-8 text-xs"
+                className={`w-8 h-8 text-xs ${page !== currentPage ? 'hover:text-accent' : ''}`}
               >
                 {page}
               </Button>
@@ -83,7 +83,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         size="sm"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={!hasNextPage}
-        className="flex items-center gap-1 min-w-[80px] justify-center h-8 px-3 text-xs"
+        className="flex items-center gap-1 min-w-[80px] justify-center h-8 px-3 text-xs hover:text-accent"
       >
         Próximo
         <ChevronRight className="w-3 h-3" />
