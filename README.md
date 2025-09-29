@@ -167,5 +167,12 @@ src/
 
 Este projeto é parte de um desafio técnico e não possui licença específica.
 
+## Próximos Passos
+
+- Implementar dropdown no menu principal com categorias de produtos.
+- Criar página de "Minha Conta" com dados do usuário e histórico de pedidos.
+- Desenvolver páginas dedicadas para Produtos, Ofertas, Novidades e Configurações.
+- Melhorar o dashboard do administrador para navegação mais intuitiva e recursos avançados.
+
 ---
 Desenvolvido para o desafio UX Software - Desenvolvedor Front-End 2025
