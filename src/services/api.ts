@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://teste-uxsoftware-backend.onrender.com";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 function getToken() {
   if (typeof window !== "undefined") {
