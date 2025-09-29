@@ -66,7 +66,7 @@ Conforme desafio da UX Software:
    Crie um arquivo `.env.local` na raiz:
 
    ```env
-   NEXT_PUBLIC_API_URL=http://localhost:3001
+   NEXT_PUBLIC_API_URL=http://localhost:3000
    ```
 
 5. **Execute o projeto**:
@@ -75,7 +75,7 @@ Conforme desafio da UX Software:
    npm run dev
    ```
 
-6. **Acesse**: `http://localhost:3000`
+6. **Acesse**: `http://localhost:3001`
 
 ### Páginas e Funcionalidades
 
