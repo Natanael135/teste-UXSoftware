@@ -58,13 +58,13 @@ export function ProductItem({ product, onEdit, onDelete }: ProductItemProps) {
           <div className="flex flex-col gap-2">
             <Button variant="outline" size="sm" onClick={onEdit}>
               <Edit className="h-4 w-4 mr-1" />
-              Editar
+              <span className="hidden sm:inline">Editar</span>
             </Button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive" size="sm">
                   <Trash2 className="h-4 w-4 mr-1" />
-                  Deletar
+                  <span className="hidden sm:inline">Deletar</span>
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
