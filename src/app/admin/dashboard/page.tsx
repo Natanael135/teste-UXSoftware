@@ -148,43 +148,36 @@ export default function AdminDashboard() {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Package className="h-6 w-6" />
-            Dashboard do Administrador
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-            <div className="relative w-full sm:flex-1">
-              <FormInput
-                placeholder="Buscar produtos..."
-                value={search}
-                onChange={setSearch}
-                prefix={<Search className="h-4 w-4" />}
-                containerClassName="relative"
-              />
-            </div>
-            <Button onClick={handleCreate} className="w-full sm:w-auto">
-              <Plus className="h-4 w-4 mr-2" />
-              Novo Produto
-            </Button>
-          </div>
-
-          <ProductList
-            products={filteredProducts}
-            onEdit={handleEdit}
-            onDelete={(product) => handleDelete(product.id)}
+      <h1 className="text-2xl font-bold flex items-center gap-2 mb-4 text-primary">
+        Dashboard do Administrador
+      </h1>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+        <div className="relative w-full sm:flex-1">
+          <FormInput
+            placeholder="Buscar produtos..."
+            value={search}
+            onChange={setSearch}
+            prefix={<Search className="h-4 w-4" />}
+            containerClassName="relative"
           />
+        </div>
+        <Button onClick={handleCreate} className="w-full sm:w-auto">
+          <Plus className="h-4 w-4 mr-2" />
+          Novo Produto
+        </Button>
+      </div>
 
-          {filteredProducts.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground">
-              Nenhum produto encontrado.
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <ProductList
+        products={filteredProducts}
+        onEdit={handleEdit}
+        onDelete={(product) => handleDelete(product.id)}
+      />
+
+      {filteredProducts.length === 0 && (
+        <div className="text-center py-8 text-muted-foreground">
+          Nenhum produto encontrado.
+        </div>
+      )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto mx-auto rounded-xl p-4 shadow-lg border border-border flex flex-col">
