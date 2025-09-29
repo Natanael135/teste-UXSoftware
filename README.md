@@ -77,6 +77,32 @@ Conforme desafio da UX Software:
 
 6. **Acesse**: `http://localhost:3000`
 
+### Páginas e Funcionalidades
+
+- `/` — **Home / Produtos**
+  - Lista todos os produtos disponíveis.
+  - Permite pesquisar, filtrar e acessar detalhes dos produtos.
+
+- `/login` — **Login**
+  - Permite ao usuário acessar sua conta.
+  - Link para cadastro de novo usuário.
+
+- `/register` — **Cadastro**
+  - Formulário para criar uma nova conta.
+  - Validação de CPF, telefone, e-mail e senha.
+
+- `/cart` — **Carrinho**
+  - Exibe os produtos adicionados ao carrinho.
+  - Permite alterar quantidades, remover itens e finalizar a compra.
+
+- `/admin/dashboard` — **Admin (Dashboard)**
+  - Área restrita para administradores.
+  - Permite criar, editar, excluir e visualizar produtos cadastrados.
+
+- `/products/[id]` — **Detalhes do Produto**
+  - Página individual de cada produto.
+  - Mostra informações detalhadas, preço, estoque e opção de adicionar ao carrinho.
+
 ## Estrutura do Projeto
 
 ```bash
