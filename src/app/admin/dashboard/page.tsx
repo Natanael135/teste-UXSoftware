@@ -7,7 +7,6 @@ import { showSuccess } from "@/utils/toast";
 import type { Product } from "@/types/product";
 import { FormInput } from "@/components/ui/form-input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -18,7 +17,7 @@ import {
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Plus, Search, Package } from "lucide-react";
+import { Plus, Search} from "lucide-react";
 import { useProductForm } from "@/hooks/useProductForm";
 import type { ProductFormData } from "@/types/form";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
