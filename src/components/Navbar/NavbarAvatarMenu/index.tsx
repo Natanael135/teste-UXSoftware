@@ -31,6 +31,11 @@ export function NavbarAvatarMenu({ user, logout }: NavbarAvatarMenuProps) {
         <DropdownMenuItem asChild>
           <Link href="/settings" className="text-foreground">Configurações</Link>
         </DropdownMenuItem>
+        {user.role === "ADMIN" && (
+          <DropdownMenuItem asChild>
+            <Link href="/admin/dashboard" className="text-primary font-semibold">Administrador</Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem variant="destructive" onClick={logout} className="text-accent">
           Sair
         </DropdownMenuItem>
