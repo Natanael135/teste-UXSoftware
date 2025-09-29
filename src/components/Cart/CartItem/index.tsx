@@ -62,7 +62,7 @@ export function CartItem({
             </Button>
           </div>
         </div>
-        <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium">Quantidade:</span>
             <button
@@ -97,7 +97,7 @@ export function CartItem({
               +
             </button>
           </div>
-          <div className="flex flex-col items-end">
+          <div className="flex flex-col items-end sm:items-end sm:ml-4 w-full">
             <span className="line-through text-xs text-muted-foreground">
               De R$ {(item.product.price * 1.07).toFixed(2)}
             </span>
